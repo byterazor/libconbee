@@ -16,7 +16,7 @@
  */
 
  /** @file */
- 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -482,4 +482,47 @@ int32_t connbee_get_version(struct connbee_frame *frame, struct connbee_version 
 
 
   return 0;
+}
+
+/**
+* @brief initialize a basic connbee frame, please always use this method for creating frame
+*
+* @return pointer to the initialized frame
+*/
+struct connbee_frame * connbee_init_frame()
+{
+  struct connbee_frame *frame = malloc(sizeof(struct connbee_frame));
+
+  frame->command          = 0;
+  frame->length           = 0;
+  frame->sequence_number  = 0;
+  frame->status           = 0;
+  frame->payload_length   = 0;
+  frame->payload          = NULL;
+
+  return frame;
+}
+
+/**
+* @brief free all memory allocated for the given frame
+*
+* remember that you can not use the given frame after calling this function.
+* otherwise you will get segmentation faults
+*
+* @param frame - pointer to the frame to free
+*/
+void connbee_free_frame(struct connbee_frame *frame)
+{
+  if (frame == NULL)
+  {
+    return;
+  }
+
+  if (frame->payload != NULL)
+  {
+    frame->payload_length=0;
+    free(frame->payload);
+  }
+
+  free(frame);
 }

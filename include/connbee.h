@@ -361,4 +361,23 @@ uint8_t connbee_frame_invalidvalue(struct connbee_frame *frame);
 */
 int32_t connbee_get_version(struct connbee_frame *frame, struct connbee_version *version);
 
+
+/**
+* @brief initialize a basic connbee frame, please always use this method for creating frame
+*
+* @return pointer to the initialized frame
+*/
+struct connbee_frame * connbee_init_frame();
+
+
+/**
+* @brief free all memory allocated for the given frame
+*
+* remember that you can not use the given frame after calling this function.
+* otherwise you will get segmentation faults
+*
+* @param frame - pointer to the frame to free
+*/
+void connbee_free_frame(struct connbee_frame *frame);
+
 #endif

@@ -526,3 +526,22 @@ void connbee_free_frame(struct connbee_frame *frame)
 
   free(frame);
 }
+
+/**
+* @brief create a frame for requeting the firmware version
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @return pointer to the frame for requesting the firmware version
+*/
+struct connbee_frame * connbee_read_firmware_request()
+{
+  struct connbee_frame *frame = connbee_init_frame();
+
+  frame->command          = COMMAND_VERSION;
+  frame->status           = 0;
+  frame->sequence_number  = 0;
+  frame->length           = 5; 
+
+  return frame;
+}

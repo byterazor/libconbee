@@ -470,6 +470,68 @@ struct connbee_frame * connbee_read_firmware_request();
 */
 struct connbee_frame * connbee_read_parameter_request(uint8_t parameter);
 
+/**
+* @brief create a frame for requesting writing a device parameter
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @param parameter - the parameter id of the parameter to write to
+* @param value     - the value to write to the parameter casted to an uint8_t
+* @param value_size- how many bytes is the value large
+*
+* @return pointer to the frame for requesting the a device parameter
+*/
+struct connbee_frame * connbee_write_parameter_request(uint8_t parameter, uint8_t *value, uint8_t value_size);
+
+/**
+* @brief create a frame for requesting writing a device parameter of value uint8_t
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @param parameter - the parameter id of the parameter to write to
+* @param value     - the value to write to the parameter
+*
+* @return pointer to the frame for requesting the a device parameter
+*/
+struct connbee_frame * connbee_write_parameter_request_uint8(uint8_t parameter, uint8_t *value);
+
+
+/**
+* @brief create a frame for requesting writing a device parameter of value uint16_t
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @param parameter - the parameter id of the parameter to write to
+* @param value     - the value to write to the parameter
+*
+* @return pointer to the frame for requesting the a device parameter
+*/
+struct connbee_frame * connbee_write_parameter_request_uint16(uint8_t parameter, uint16_t *value);
+
+/**
+* @brief create a frame for requesting writing a device parameter of value uint32_t
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @param parameter - the parameter id of the parameter to write to
+* @param value     - the value to write to the parameter
+*
+* @return pointer to the frame for requesting the a device parameter
+*/
+struct connbee_frame * connbee_write_parameter_request_uint32(uint8_t parameter, uint32_t *value);
+
+/**
+* @brief create a frame for requesting writing a device parameter of value uint64_t
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @param parameter - the parameter id of the parameter to write to
+* @param value     - the value to write to the parameter
+*
+* @return pointer to the frame for requesting the a device parameter
+*/
+struct connbee_frame * connbee_write_parameter_request_uint64(uint8_t parameter, uint64_t *value);
+
 
 /**
 * @brief parse a read_parameter_response into a uint64_t

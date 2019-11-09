@@ -592,7 +592,7 @@ int32_t connbee_read_parameter_response_uint64(struct connbee_frame *frame, uint
 
   if (frame->payload_length-(uint16_t)3 != sizeof(uint64_t))
   {
-      fprintf(stderr,"error: frame payload has not the exact bytes(%u) for uint64_t(%lu)\n",frame->payload_length-(uint16_t)3,sizeof(uint8_t));
+      fprintf(stderr,"error: frame payload has not the exact bytes(%u) for uint64_t(%lu)\n",frame->payload_length-(uint16_t)3,sizeof(uint64_t));
       return -1;
   }
 

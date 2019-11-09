@@ -133,6 +133,76 @@
 #define TTY_CONNECTED                 0x01
 /** @} */
 
+
+/**
+ * @defgroup CONNBEE device parameters
+ *
+ * @{
+ */
+/// the MAC address of the device
+#define PARAM_MAC_ADDRESS             0x01
+
+/// the zigbee network panid
+#define PARAM_NWK_PANID               0x05
+
+/// the zigbee network address
+#define PARAM_NWK_ADDRESS             0x07
+
+/// the zigbee network extended panid
+#define PARAM_NWK_EXT_PANID           0x08
+
+/// is the device configured as a coordinator
+#define PARAM_APS_COORDINATOR         0x09
+
+/// the zigbee channel mask
+#define PARAM_CHANNEL_MASK            0x0A
+
+/// the APS extended PANID
+#define PARAM_APS_EXT_PANID           0x0B
+
+/// the zigbee address of the trust center
+#define PARAM_TRUST_CENTER_ADDRESS    0x0E
+
+/// in which security mode is the network working
+#define PARAM_SECURITY_MODE           0x10
+
+/// the network encrypting key
+#define PARAM_NETWORK_KEY             0x18
+
+/// the current channel the device is locked on
+#define PARAM_CURRENT_CHANNEL         0x1C
+
+/// the implemented protocol version of the device
+#define PARAM_PROTOCOL_VERSION        0x22
+
+/// the network update id
+#define PARAM_NWK_UPDATE_ID           0x24
+
+/// the watchdog time to live
+#define PARAM_WATCHDOG_TTL            0x26
+
+/** @} */
+
+/**
+ * @defgroup CONNBEE security modes
+ *
+ * @{
+ */
+
+/// no security enabled
+#define SECURITY_MODE_NO              0x00
+
+/// preconfigured network key
+#define SECURITY_MODE_PRECONF         0x01
+
+/// network key from trust center
+#define SECURITY_MODE_TC              0x02
+
+/// no master but trust center link key
+#define SECURITY_MODE_NO_MASTER       0x03
+
+/** @} */
+
 /**
 * @brief a connbee device represented by the name of the uart/tty device
 *
@@ -390,4 +460,55 @@ void connbee_free_frame(struct connbee_frame *frame);
 * @return pointer to the frame for requesting the firmware version
 */
 struct connbee_frame * connbee_read_firmware_request();
+
+/**
+* @brief create a frame for requesting reading a device parameter
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @return pointer to the frame for requesting the a device parameter
+*/
+struct connbee_frame * connbee_read_parameter_request(uint8_t parameter);
+
+
+/**
+* @brief parse a read_parameter_response into a uint64_t
+*
+* @param data - return the value by call by reference
+*
+* @return   0 - everything worked fine
+* @return  -1 - no value of this type available in frame
+*/
+int32_t connbee_read_parameter_response_uint64(struct connbee_frame *frame, uint64_t *data);
+
+/**
+* @brief parse a read_parameter_response into a uint32_t
+*
+* @param data - return the value by call by reference
+*
+* @return   0 - everything worked fine
+* @return  -1 - no value of this type available in frame
+*/
+int32_t connbee_read_parameter_response_uint32(struct connbee_frame *frame, uint32_t *data);
+
+/**
+* @brief parse a read_parameter_response into a uint16_t
+*
+* @param data - return the value by call by reference
+*
+* @return   0 - everything worked fine
+* @return  -1 - no value of this type available in frame
+*/
+int32_t connbee_read_parameter_response_uint16(struct connbee_frame *frame, uint16_t *data);
+
+/**
+* @brief parse a read_parameter_response into a uint8_t
+*
+* @param data - return the value by call by reference
+*
+* @return   0 - everything worked fine
+* @return  -1 - no value of this type available in frame
+*/
+int32_t connbee_read_parameter_response_uint8(struct connbee_frame *frame, uint8_t *data);
+
 #endif

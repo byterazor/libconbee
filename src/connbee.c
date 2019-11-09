@@ -229,11 +229,18 @@ int32_t connbee_write_frame(struct connbee_device *dev, struct connbee_frame *fr
   buffer[2] = frame->status;
   memcpy(&buffer[3],&frame->length,sizeof(frame->length));
 
+  if (frame->payload_length > 0)
+  {
+    memcpy(&buffer[5],&frame->payload_length,sizeof(frame->payload_length));
+    memcpy(&buffer[5+sizeof(frame->payload_length)],frame->payload,frame->payload_length);
+  }
+
+
   // generate crc16
   uint16_t crc = crc16(buffer, frame->length);
-  memcpy(&buffer[5],&crc,sizeof(crc));
+  memcpy(&buffer[frame->length],&crc,sizeof(crc));
 
-  slip_transmit_packet(dev,buffer, frame->length+ frame->payload_length+sizeof(crc));
+  slip_transmit_packet(dev,buffer, frame->length+sizeof(crc));
 
 
   return 0;
@@ -272,7 +279,6 @@ int32_t connbee_read_frame(struct connbee_device *dev, struct connbee_frame *fra
 
     if (crc != crc2)
     {
-      printf("%X - %X\n",crc,crc2);
       fprintf(stderr,"error: receiving from %s (wrong crc)\n", dev->tty);
       return -2;
     }
@@ -541,7 +547,134 @@ struct connbee_frame * connbee_read_firmware_request()
   frame->command          = COMMAND_VERSION;
   frame->status           = 0;
   frame->sequence_number  = 0;
-  frame->length           = 5; 
+  frame->length           = 5;
 
   return frame;
+}
+
+/**
+* @brief create a frame for requesting reading a device parameter
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @return pointer to the frame for requesting the a device parameter
+*/
+struct connbee_frame * connbee_read_parameter_request(uint8_t parameter)
+{
+  struct connbee_frame *frame = connbee_init_frame();
+
+  frame->command          = COMMAND_READ_PARAMETER;
+  frame->status           = 0;
+  frame->sequence_number  = 0;
+  frame->length           = 8;
+  frame->payload_length   = 1;
+  frame->payload          = malloc(1);
+  *frame->payload         = parameter;
+
+  return frame;
+}
+
+/**
+* @brief parse a read_parameter_response into a uint64_t
+*
+* @param data - return the value by call by reference
+*
+* @return   0 - everything worked fine
+* @return  -1 - no value of this type available in frame
+*/
+int32_t connbee_read_parameter_response_uint64(struct connbee_frame *frame, uint64_t *data)
+{
+
+  /*
+  * a read parameter response always has as payload the payload length and the paramter id
+  * therefore, we have to skip the first 3 bytes of the payload
+  */
+
+  if (frame->payload_length-(uint16_t)3 != sizeof(uint64_t))
+  {
+      fprintf(stderr,"error: frame payload has not the exact bytes(%u) for uint64_t(%lu)\n",frame->payload_length-(uint16_t)3,sizeof(uint8_t));
+      return -1;
+  }
+
+  memcpy(data, &frame->payload[3], sizeof(uint64_t));
+
+  return 0;
+}
+
+/**
+* @brief parse a read_parameter_response into a uint32_t
+*
+* @param data - return the value by call by reference
+*
+* @return   0 - everything worked fine
+* @return  -1 - no value of this type available in frame
+*/
+int32_t connbee_read_parameter_response_uint32(struct connbee_frame *frame, uint32_t *data)
+{
+  /*
+  * a read parameter response always has as payload the payload length and the paramter id
+  * therefore, we have to skip the first 3 bytes of the payload
+  */
+
+  if (frame->payload_length-3 != sizeof(uint32_t))
+  {
+      fprintf(stderr,"error: frame payload has not the exact bytes for uint32_t\n");
+      return -1;
+  }
+
+  memcpy(data, &frame->payload[3], sizeof(uint32_t));
+
+  return 0;
+}
+
+/**
+* @brief parse a read_parameter_response into a uint16_t
+*
+* @param data - return the value by call by reference
+*
+* @return   0 - everything worked fine
+* @return  -1 - no value of this type available in frame
+*/
+int32_t connbee_read_parameter_response_uint16(struct connbee_frame *frame, uint16_t *data)
+{
+  /*
+  * a read parameter response always has as payload the payload length and the paramter id
+  * therefore, we have to skip the first 3 bytes of the payload
+  */
+
+  if (frame->payload_length-3 != sizeof(uint16_t))
+  {
+      fprintf(stderr,"error: frame payload has not the exact bytes for uint16_t\n");
+      return -1;
+  }
+
+  memcpy(data, &frame->payload[3], sizeof(uint16_t));
+
+  return 0;
+}
+
+/**
+* @brief parse a read_parameter_response into a uint8_t
+*
+* @param data - return the value by call by reference
+*
+* @return   0 - everything worked fine
+* @return  -1 - no value of this type available in frame
+*/
+int32_t connbee_read_parameter_response_uint8(struct connbee_frame *frame, uint8_t *data)
+{
+  /*
+  * a read parameter response always has as payload the payload length and the paramter id
+  * therefore, we have to skip the first 3 bytes of the payload
+  */
+
+  if (frame->payload_length-3 != sizeof(uint8_t))
+  {
+      fprintf(stderr,"error: frame payload has not the exact bytes(%d) for uint8_t(%lu)\n",frame->payload_length-3,sizeof(uint8_t));
+      return -1;
+  }
+
+  memcpy(data, &frame->payload[3], sizeof(uint8_t));
+
+  return 0;
 }

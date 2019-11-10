@@ -836,3 +836,41 @@ struct connbee_frame * connbee_device_network_leave_request()
 
   return frame;
 }
+
+/**
+* @brief parse a device state response and return a device state structure
+*
+* @param  frame - pointer to the frame to parse
+* @param  state - pointer to the state to save the state in
+*
+* @return   0 - everything worked fine
+* @return  -1 - no state information could be found
+*/
+int32_t connbee_device_state_response(struct connbee_frame *frame, struct connbee_device_state *state)
+{
+
+  uint8_t stateByte;
+
+  // there are two responses containing state information
+  switch(frame->command)
+  {
+    case COMMAND_DEVICE_STATE:
+                              stateByte = frame->payload[1];
+                              break;
+
+    case COMMAND_DEVICE_STATE_CHANGED:
+                              stateByte = frame->payload[0];
+                              break;
+
+    default:
+                              return -1;
+  }
+
+  state->network_state                  = stateByte & 0x03;
+  state->apsde_data_confirm             = stateByte & 0x04;
+  state->apsde_data_indication          = stateByte & 0x08;
+  state->configuration_changed          = stateByte & 0x10;
+  state->apsde_data_request_free_slots  = stateByte & 0x20;
+
+  return 0;
+}

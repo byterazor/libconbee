@@ -271,6 +271,28 @@ struct connbee_version
 };
 
 /**
+* @brief connbee device state
+*
+*/
+struct connbee_device_state
+{
+  /// current state of the network
+  uint8_t network_state;
+
+  /// APSDE-DATA.confirm
+  uint8_t apsde_data_confirm;
+
+  /// todo: fill in as soon as i know more about it
+  uint8_t apsde_data_indication;
+
+  /// todo: fill in as soon as i know more about it
+  uint8_t configuration_changed;
+
+  /// todo: fill in as soon as i know more about it
+  uint8_t apsde_data_request_free_slots;
+};
+
+/**
 * @brief function to connect to the connbee stick on the given tty
 *
 * @param dev     - pointer to a connbee_device structure, please make memory is already allocated
@@ -598,5 +620,17 @@ int32_t connbee_read_parameter_response_uint16(struct connbee_frame *frame, uint
 * @return  -1 - no value of this type available in frame
 */
 int32_t connbee_read_parameter_response_uint8(struct connbee_frame *frame, uint8_t *data);
+
+
+/**
+* @brief parse a device state response and return a device state structure
+*
+* @param  frame - pointer to the frame to parse
+* @param  state - pointer to the state to save the state in
+*
+* @return   0 - everything worked fine
+* @return  -1 - no state information could be found
+*/
+int32_t connbee_device_state_response(struct connbee_frame *frame, struct connbee_device_state *state);
 
 #endif

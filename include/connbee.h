@@ -550,6 +550,14 @@ struct connbee_frame * connbee_device_status_request();
 */
 struct connbee_frame * connbee_device_network_join_create_request();
 
+/**
+* @brief create a frame for requesting to leave a network
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @return pointer to the frame for requesting the network leaving
+*/
+struct connbee_frame * connbee_device_network_leave_request();
 
 /**
 * @brief parse a read_parameter_response into a uint64_t

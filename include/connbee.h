@@ -203,6 +203,37 @@
 
 /** @} */
 
+
+/**
+ * @defgroup CONNBEE destination address modes
+ *
+ * @{
+ */
+
+/// use group addressing
+#define DEST_ADDR_GROUP               0x01
+
+/// use NWK addressing
+#define DEST_ADDR_NWK                 0x02
+
+/// use IEEE addressing
+#define DEST_ADDR_IEEE                0x03
+
+/** @} */
+
+
+/**
+ * @defgroup CONNBEE routing
+ *
+ * @{
+ */
+
+/// allow an unlimited number of hops
+#define ROUTE_HOP_COUNT_UNLIMITED     0x00
+
+ /** @} */
+
+
 /**
 * @brief a connbee device represented by the name of the uart/tty device
 *

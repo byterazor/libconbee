@@ -874,3 +874,32 @@ int32_t connbee_device_state_response(struct connbee_frame *frame, struct connbe
 
   return 0;
 }
+
+
+/**
+* @brief create a frame for requesting available APS data
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @return pointer to the frame for requesting the aps data
+*/
+struct connbee_frame * connbee_device_get_aps_data_request()
+{
+  struct connbee_frame *frame = connbee_init_frame();
+  uint8_t flags = 0;
+
+  // at the moment enabling all flags
+  flags |= 0x01;
+  flags |= 0x02;
+  flags |= 0x04;
+
+  frame->command           = COMMAND_APS_DATA_INDICATION;
+  frame->sequence_number   = 0;
+  frame->status            = 0;
+  frame->length            = 8;
+  frame->payload_length    = 1;
+  frame->payload           = malloc(1);
+  frame->payload[0]        = flags;
+
+  return frame;
+}

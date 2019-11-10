@@ -582,6 +582,15 @@ struct connbee_frame * connbee_device_network_join_create_request();
 struct connbee_frame * connbee_device_network_leave_request();
 
 /**
+* @brief create a frame for requesting available APS data
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @return pointer to the frame for requesting the aps data
+*/
+struct connbee_frame * connbee_device_get_aps_data_request();
+
+/**
 * @brief parse a read_parameter_response into a uint64_t
 *
 * @param data - return the value by call by reference

@@ -542,6 +542,16 @@ struct connbee_frame * connbee_write_parameter_request_uint64(uint8_t parameter,
 struct connbee_frame * connbee_device_status_request();
 
 /**
+* @brief create a frame for requesting to create/join a network
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @return pointer to the frame for requesting the network creation/joining
+*/
+struct connbee_frame * connbee_device_network_join_create_request();
+
+
+/**
 * @brief parse a read_parameter_response into a uint64_t
 *
 * @param data - return the value by call by reference

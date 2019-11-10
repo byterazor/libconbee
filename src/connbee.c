@@ -792,3 +792,25 @@ struct connbee_frame * connbee_device_status_request()
 
   return frame;
 }
+
+/**
+* @brief create a frame for requesting to create/join a network
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @return pointer to the frame for requesting the network creation/joining
+*/
+struct connbee_frame * connbee_device_network_join_create_request()
+{
+  struct connbee_frame *frame = connbee_init_frame();
+
+  frame->command           = COMMAND_CHANGE_NETWORK_STATE;
+  frame->sequence_number   = 0;
+  frame->status            = 0;
+  frame->length            = 6;
+  frame->payload_length    = 1;
+  frame->payload           = malloc(1);
+  frame->payload[0]        = NETWORK_CONNECTED;
+
+  return frame;
+}

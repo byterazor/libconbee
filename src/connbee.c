@@ -862,6 +862,10 @@ int32_t connbee_device_state_response(struct connbee_frame *frame, struct connbe
                               stateByte = frame->payload[0];
                               break;
 
+    case COMMAND_APS_DATA_INDICATION:
+                              stateByte = frame->payload[3];
+                              break;
+
     default:
                               return -1;
   }

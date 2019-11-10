@@ -22,24 +22,31 @@ int main()
 {
 
   struct connbee_device dev;
-  struct connbee_frame frame;
-  struct connbee_version version;
+  struct connbee_frame *frame;
+  struct connbee_frame *response;
+  int32_t err=0;
 
-  connbee_connect(&dev,"/dev/ttyACM1");
+  connbee_connect(&dev,"/dev/ttyACM0");
+  printf("Connected\n");
 
+  frame     = connbee_device_status_request();
+  response  = connbee_init_frame();
 
-  frame.command         = COMMAND_VERSION;
-  frame.sequence_number = 0;
-  frame.status          = 0;
-  frame.length          = 5;
+  connbee_write_frame(&dev,frame);
+  connbee_read_frame(&dev, response);
 
-  connbee_write_frame(&dev,&frame);
-  connbee_read_frame(&dev,&frame);
-  connbee_get_version(&frame, &version);
+  if(connbee_frame_success(response))
+  {
+    printf("payload: ");
+    for(int i=0; i<response->payload_length; i++)
+    {
+      printf("%.2X ", response->payload[i]);
+    }
+    printf("\n");
+  }
 
-  printf("Major   : %X\n",version.major);
-  printf("Minor   : %X\n",version.minor);
-  printf("Platform: %X\n",version.platform);
+  connbee_free_frame(frame);
+  connbee_free_frame(response);
 
 
   connbee_close(&dev);

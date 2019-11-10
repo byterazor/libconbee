@@ -767,3 +767,28 @@ struct connbee_frame * connbee_write_parameter_request_uint64(uint8_t parameter,
 {
   return connbee_write_parameter_request(parameter, (uint8_t*)value, sizeof(uint64_t));
 }
+
+
+/**
+* @brief create a frame for requesting the device status
+*
+* make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
+*
+* @return pointer to the frame for requesting the device status
+*/
+struct connbee_frame * connbee_device_status_request()
+{
+  struct connbee_frame *frame = connbee_init_frame();
+
+  frame->command           = COMMAND_DEVICE_STATE;
+  frame->sequence_number   = 0;
+  frame->status            = 0;
+  frame->length            = 8;
+  frame->payload_length    = 3;
+  frame->payload           = malloc(3);
+  frame->payload[0]        = 0;
+  frame->payload[1]        = 0;
+  frame->payload[2]        = 0;
+
+  return frame;
+}

@@ -1013,13 +1013,10 @@ int32_t connbee_wait_for_frame(struct connbee_device *dev, struct connbee_frame 
   while(1)
   {
     struct connbee_queue_item *item = dev->receive_queue.head;
-    printf("%s\n", dev->receive_queue.head == NULL ? "empty" : "not empty");
 
     while(item != NULL)
     {
       help_frame = (struct connbee_frame *) item->contents;
-
-      printf("item: %X,%X, %X, %X\n",help_frame->command, help_frame->sequence_number, command, sequence_number);
 
       if (command == COMMAND_ANY && help_frame->sequence_number==sequence_number)
       {

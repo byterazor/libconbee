@@ -17,6 +17,8 @@ cmake_minimum_required (VERSION 3.1 FATAL_ERROR)
 project (libconnbee VERSION 0.1.0 LANGUAGES  C)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
+find_package(Threads)
+
 include(doxygen)
 build_docs(PROCESS_DOXYFILE DOXYFILE_PATH "docs/Doxyfile.in" )
 
@@ -31,6 +33,8 @@ set(LIBCONNBEE_SOURCES
   src/crc16.c
   include/connbee-queue.h
   src/connbee-queue.c
+  src/connbee-send-receive.h
+  src/connbee-send-receive.c
   include/connbee.h
   src/connbee.c
 )
@@ -55,12 +59,16 @@ target_include_directories(connbee
           src
 )
 
+target_link_libraries(connbee ${CMAKE_THREAD_LIBS_INIT})
+
 target_include_directories(connbee-static
   PUBLIC
           include
   PRIVATE
           src
 )
+
+target_link_libraries(connbee-static ${CMAKE_THREAD_LIBS_INIT})
 
 
 add_executable(connbeectrl

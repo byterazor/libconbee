@@ -20,6 +20,9 @@
 /** @file */
 
 #include <stdint.h>
+#include <connbee-queue.h>
+#include <pthread.h>
+#include <unistd.h>
 
 /**
  * @defgroup CONNBEE STATUS Codes
@@ -103,6 +106,9 @@
 
 /// @todo document as soon as i exactly know what it is doing
 #define COMMAND_APS_DATA_INDICATION   0x17
+
+/// command representing any command, just used for the wait_for_frame function !!!!
+#define COMMAND_ANY                   0xFF
 /** @} */
 
 
@@ -216,7 +222,7 @@
 /// use NWK addressing
 #define DEST_ADDR_NWK                 0x02
 
-/// use IEEE addressing
+/// use IEEE addressing, sometimes referred to as MAC addressing
 #define DEST_ADDR_IEEE                0x03
 
 /** @} */
@@ -254,6 +260,41 @@ struct connbee_device
 
   /// pointer to the connbee_read_byte function
   int32_t (*read_byte)(struct connbee_device *,uint8_t *);
+
+  /// queue for all frames which should be transmitted
+  struct connbee_queue_root send_queue;
+
+  /// mutex protecting the send_queue
+  pthread_mutex_t mutex_send_queue;
+
+  /// pipe for signalling the transmission process that there is data available
+  /// we use a pipe because the select syscall can wait for file descriptors and pipes
+  int pipe_send_queue[2];
+
+  /// mutex to protect the send part of the pipe
+  pthread_mutex_t mutex_send_pipe;
+
+  /// queue for all frame which have been received
+  struct connbee_queue_root receive_queue;
+
+  /// mutex protecting the send_queue
+  pthread_mutex_t mutex_receive_queue;
+
+  /// condition variable for signaling changes to the receive queue
+  pthread_cond_t cond_receive_queue;
+
+  /// the pthread for managing the transmission and reception of data
+  pthread_t worker;
+
+  /// show that worker is running
+  uint8_t worker_running;
+
+  /// signal to shutdown the worker
+  uint8_t worker_stop;
+
+  /// mutex to protext worker_running and worker_stop
+  pthread_mutex_t mutex_worker;
+
 };
 
 
@@ -390,6 +431,38 @@ int32_t connbee_write_frame(struct connbee_device *dev, struct connbee_frame *fr
 * @return  -2 - connbee device is not connected
 */
 int32_t connbee_read_frame(struct connbee_device *dev, struct connbee_frame *frame);
+
+
+/**
+* @brief enqueue a frame for transmission
+*
+* do not use or free the frame after calling this function
+* the frame is freed after the real transmission happened without user intervention
+*
+* @param dev    - the connbee_device to read the frame from, make sure it is already connected
+* @param frame  - the frame to enqueue for transmission
+*
+* @return   0 - everything went fine, frame is enqueue
+* @return  -1 - error occured, use ernno to find out what
+* @return  -2 - connbee device is not connected
+*/
+int32_t connbee_enqueue_frame(struct connbee_device *dev, struct connbee_frame *frame);
+
+/**
+* @brief wait for the reception of a specific frame
+*
+* free the frame after processing !!!
+*
+* @param dev                        - the connbee_device to read the frame from, make sure it is already connected
+* @param frame                      - the frame received
+* @param sequence_number            - wait for this sequence number
+* @param command                    - wait for this command type
+*
+* @return   0 - everything went fine, frame is enqueue
+* @return  -1 - error occured, use ernno to find out what
+* @return  -2 - connbee device is not connected
+*/
+int32_t connbee_wait_for_frame(struct connbee_device *dev, struct connbee_frame **frame, uint8_t sequence_number, uint8_t command);
 
 
 /**

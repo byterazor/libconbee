@@ -28,7 +28,10 @@
 #include <slip.h>
 #include <crc16.h>
 #include <arpa/inet.h>
-
+#include <connbee-queue.h>
+#include <connbee-send-receive.h>
+#include <pthread.h>
+#include <time.h>
 /**
 * @brief function to connect to the connbee stick on the given tty
 *
@@ -116,6 +119,34 @@ int32_t connbee_connect(struct connbee_device *dev, char *ttyname)
   dev->write_byte = &connbee_write_byte;
   dev->read_byte  = &connbee_read_byte;
 
+  // initialize send an receive queues
+  connbee_queue_init(&dev->send_queue);
+  connbee_queue_init(&dev->receive_queue);
+
+  // initialize mutex to protect queues
+  pthread_mutex_init(&dev->mutex_send_queue, NULL);
+  pthread_mutex_init(&dev->mutex_receive_queue, NULL);
+  pthread_mutex_init(&dev->mutex_send_pipe,NULL);
+
+  // initialize condition variables to notify listeners to queues
+  pthread_cond_init(&dev->cond_receive_queue,NULL);
+
+  err = pipe(dev->pipe_send_queue);
+  if (err < 0)
+  {
+      fprintf(stderr,"error: initializing send queue pipes (%s)\n", strerror (errno));
+      close(dev->fd);
+
+      return -1;
+  }
+
+  // start the transmission and reception thread
+  pthread_mutex_init(&dev->mutex_worker, NULL);
+  dev->worker_running=0;
+  dev->worker_stop=0;
+
+  pthread_create(&dev->worker, NULL, connbee_send_receive, (void *)dev);
+
   // set tty as connected
   dev->tty_status=TTY_CONNECTED;
 
@@ -129,6 +160,24 @@ int32_t connbee_connect(struct connbee_device *dev, char *ttyname)
 */
 void connbee_close(struct connbee_device *dev)
 {
+  pthread_mutex_lock(&dev->mutex_worker);
+  dev->worker_stop=1;
+  pthread_mutex_unlock(&dev->mutex_worker);
+
+  uint8_t stopped=0;
+  while(!stopped)
+  {
+    pthread_mutex_lock(&dev->mutex_worker);
+    if(dev->worker_running == 0)
+    {
+      stopped = 1;
+    }
+    pthread_mutex_unlock(&dev->mutex_worker);
+    usleep(100);
+  }
+
+  pthread_join(dev->worker,NULL);
+
   close(dev->fd);
 
   dev->tty_status = TTY_DISCONNECTED;
@@ -680,7 +729,7 @@ int32_t connbee_read_parameter_response_uint8(struct connbee_frame *frame, uint8
 }
 
 /**
-* @brief create a frame for requesting writing a device parameter
+* @brief cr#include <time.heate a frame for requesting writing a device parameter
 *
 * make sure to *free* the returned frame after using it! Otherwise you will get memory leaks
 *
@@ -906,4 +955,101 @@ struct connbee_frame * connbee_device_get_aps_data_request()
   frame->payload[0]        = flags;
 
   return frame;
+}
+
+/**
+* @brief enqueue a frame for transmission
+*
+* do not use or free the frame after calling this function
+* the frame is freed after the real transmission happened without user intervention
+*
+* @param dev    - the connbee_device to read the frame from, make sure it is already connected
+* @param frame  - the frame to enqueue for transmission
+*
+* @return   0 - everything went fine, frame is enqueue
+* @return  -1 - error occured, use ernno to find out what
+* @return  -2 - connbee device is not connected
+*/
+int32_t connbee_enqueue_frame(struct connbee_device *dev, struct connbee_frame *frame)
+{
+  pthread_mutex_lock(&dev->mutex_send_queue);
+  connbee_queue_push(&dev->send_queue, (void *) frame);
+  pthread_mutex_unlock(&dev->mutex_send_queue);
+
+  // wake up transmitter
+  uint8_t buf[2]={0x00,0x00};
+  pthread_mutex_lock(&dev->mutex_send_pipe);
+  write(dev->pipe_send_queue[1],buf,2);
+  pthread_mutex_unlock(&dev->mutex_send_pipe);
+
+
+  return 0;
+}
+
+
+/**
+* @brief wait for the reception of a specific frame
+*
+* free the frame after processing !!!
+*
+* @param dev                        - the connbee_device to read the frame from, make sure it is already connected
+* @param frame                      - the frame received
+* @param sequence_number            - wait for this sequence number
+* @param command                    - wait for this command type
+*
+* @return   0 - everything went fine, frame is enqueue
+* @return  -1 - error occured, use ernno to find out what
+* @return  -2 - connbee device is not connected
+*/
+int32_t connbee_wait_for_frame(struct connbee_device *dev, struct connbee_frame **frame, uint8_t sequence_number, uint8_t command)
+{
+  uint8_t found=0;
+  struct connbee_frame *help_frame = NULL;
+  time_t current_time = time(NULL);
+
+  // lock reception queue and search for message
+  pthread_mutex_lock(&dev->mutex_receive_queue);
+
+  while(1)
+  {
+    struct connbee_queue_item *item = dev->receive_queue.head;
+    printf("%s\n", dev->receive_queue.head == NULL ? "empty" : "not empty");
+
+    while(item != NULL)
+    {
+      help_frame = (struct connbee_frame *) item->contents;
+
+      printf("item: %X,%X, %X, %X\n",help_frame->command, help_frame->sequence_number, command, sequence_number);
+
+      if (command == COMMAND_ANY && help_frame->sequence_number==sequence_number)
+      {
+        found = 1;
+        connbee_queue_delete(&dev->receive_queue, item);
+        break;
+      }
+      else if (help_frame->command == command && help_frame->sequence_number == sequence_number)
+      {
+        found = 1;
+        connbee_queue_delete(&dev->receive_queue, item);
+        break;
+      }
+      else
+      {
+        help_frame = NULL;
+      }
+    }
+    pthread_mutex_unlock(&dev->mutex_receive_queue);
+
+    if (found)
+    {
+      *frame = help_frame;
+      return 0;
+    }
+
+    pthread_mutex_lock(&dev->mutex_receive_queue);
+    pthread_cond_wait(&dev->cond_receive_queue, &dev->mutex_receive_queue);
+  }
+
+
+  return 0;
 }

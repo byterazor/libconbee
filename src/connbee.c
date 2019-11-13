@@ -128,6 +128,9 @@ int32_t connbee_connect(struct connbee_device *dev, char *ttyname)
   pthread_mutex_init(&dev->mutex_send_queue, NULL);
   pthread_mutex_init(&dev->mutex_receive_queue, NULL);
   pthread_mutex_init(&dev->mutex_send_pipe,NULL);
+  pthread_mutex_init(&dev->mutex_sequence_number,NULL);
+
+  dev->sequence_number=0;
 
   // initialize condition variables to notify listeners to queues
   pthread_cond_init(&dev->cond_receive_queue,NULL);
@@ -967,12 +970,22 @@ struct connbee_frame * connbee_device_get_aps_data_request()
 * @param dev    - the connbee_device to read the frame from, make sure it is already connected
 * @param frame  - the frame to enqueue for transmission
 *
-* @return   0 - everything went fine, frame is enqueue
+* @return   >=0 - the selected sequence number for a request
 * @return  -1 - error occured, use ernno to find out what
 * @return  -2 - connbee device is not connected
 */
 int32_t connbee_enqueue_frame(struct connbee_device *dev, struct connbee_frame *frame)
 {
+  uint8_t sequence_number = 0;
+
+  pthread_mutex_lock(&dev->mutex_sequence_number);
+  sequence_number = dev->sequence_number;
+  dev->sequence_number++;
+  pthread_mutex_unlock(&dev->mutex_sequence_number);
+
+  // set the sequence number in the frame
+  frame->sequence_number=sequence_number;
+
   pthread_mutex_lock(&dev->mutex_send_queue);
   connbee_queue_push(&dev->send_queue, (void *) frame);
   pthread_mutex_unlock(&dev->mutex_send_queue);
@@ -984,7 +997,7 @@ int32_t connbee_enqueue_frame(struct connbee_device *dev, struct connbee_frame *
   pthread_mutex_unlock(&dev->mutex_send_pipe);
 
 
-  return 0;
+  return sequence_number;
 }
 
 

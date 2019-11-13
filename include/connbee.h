@@ -295,6 +295,12 @@ struct connbee_device
   /// mutex to protext worker_running and worker_stop
   pthread_mutex_t mutex_worker;
 
+  /// counter for request sequence numbers
+  uint8_t sequence_number;
+
+  /// mutex to protect sequence_number
+  pthread_mutex_t mutex_sequence_number;
+
 };
 
 

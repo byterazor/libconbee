@@ -24,7 +24,7 @@
 *
 * @param queue - pointer to the queue
 */
-void init_queue(struct connbee_queue_root* queue){
+void connbee_queue_init(struct connbee_queue_root* queue){
 	queue->head = queue->tail = NULL;
 }
 
@@ -34,13 +34,16 @@ void init_queue(struct connbee_queue_root* queue){
 * @param queue - pointer to the head of the queue
 * @param contents - the content to enqueue
 */
-void push_queue(struct connbee_queue_root* queue, void *content){
+void connbee_queue_push(struct connbee_queue_root* queue, void *content){
 	struct connbee_queue_item *item = malloc(sizeof(item));
 	item->contents = content;
-	item->next = NULL;
+	item->next     = NULL;
+  item->previous = NULL;
+
 	if (queue->head == NULL){
 		queue->head = queue->tail = item;
 	} else {
+    item->previous = queue->tail;
 		queue->tail = queue->tail->next = item;
 	}
 }
@@ -52,7 +55,7 @@ void push_queue(struct connbee_queue_root* queue, void *content){
 *
 * @return pointer to the content
 */
-void * pop_queue(struct connbee_queue_root* queue){
+void * connbee_queue_pop(struct connbee_queue_root* queue){
 	void * popped;
 	if (queue->head == NULL){
 		return NULL; // causes a compile warning.  Just check for ==NULL when popping.
@@ -65,4 +68,25 @@ void * pop_queue(struct connbee_queue_root* queue){
 			queue->tail = NULL;
 	}
 	return popped;
+}
+
+
+/**
+* @brief delete item from queue
+*
+* @param  queue - the queue from which to delete the item
+* @param item   - queue element to delete
+*
+*/
+void connbee_queue_delete(struct connbee_queue_root *queue, struct connbee_queue_item *item)
+{
+  if (item->previous == NULL)
+  {
+    queue->head = item->next;
+  }
+  else
+  {
+    item->previous->next=item->next;
+  }
+  free(item);
 }

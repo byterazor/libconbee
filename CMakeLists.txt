@@ -29,6 +29,8 @@ set(LIBCONNBEE_SOURCES
   src/slip.h
   src/crc16.h
   src/crc16.c
+  include/connbee-queue.h
+  src/connbee-queue.c
   include/connbee.h
   src/connbee.c
 )

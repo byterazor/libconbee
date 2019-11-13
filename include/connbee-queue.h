@@ -28,6 +28,9 @@ struct connbee_queue_item {
 
   /// link to the next element in the queue
 	struct connbee_queue_item* next;
+
+  /// link to the previous element in the queue
+  struct connbee_queue_item* previous;
 };
 
 /// structure representing the root of a queue with links to head and tail
@@ -45,7 +48,7 @@ struct connbee_queue_root {
 *
 * @param queue - pointer to the queue
 */
-void init_queue(struct connbee_queue_root* queue);
+void connbee_queue_init(struct connbee_queue_root* queue);
 
 
 /**
@@ -54,7 +57,7 @@ void init_queue(struct connbee_queue_root* queue);
 * @param queue - pointer to the head of the queue
 * @param contents - the content to enqueue
 */
-void push_queue(struct connbee_queue_root* queue, void *content);
+void connbee_queue_push(struct connbee_queue_root* queue, void *content);
 
 /**
 * @brief pop content from the queue
@@ -63,6 +66,15 @@ void push_queue(struct connbee_queue_root* queue, void *content);
 *
 * @return pointer to the content
 */
-void * pop_queue(struct connbee_queue_root* queue);
+void * connbee_queue_pop(struct connbee_queue_root* queue);
+
+/**
+* @brief delete item from queue
+*
+* @param  queue - the queue from which to delete the item
+* @param item   - queue element to delete
+*
+*/
+void connbee_queue_delete(struct connbee_queue_root *queue, struct connbee_queue_item *item);
 
 #endif

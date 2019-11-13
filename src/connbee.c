@@ -29,6 +29,7 @@
 #include <crc16.h>
 #include <arpa/inet.h>
 #include <connbee-queue.h>
+#include <connbee-internal.h>
 #include <connbee-send-receive.h>
 #include <pthread.h>
 #include <time.h>

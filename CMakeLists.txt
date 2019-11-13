@@ -35,6 +35,7 @@ set(LIBCONNBEE_SOURCES
   src/connbee-queue.c
   src/connbee-send-receive.h
   src/connbee-send-receive.c
+  src/connbee-functions.c
   include/connbee.h
   src/connbee.c
 )

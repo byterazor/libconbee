@@ -535,8 +535,6 @@ struct connbee_frame * connbee_init_frame();
 */
 void connbee_free_frame(struct connbee_frame *frame);
 
-
-
 /**
 * @brief create a frame for requeting the firmware version
 *
@@ -704,5 +702,13 @@ int32_t connbee_read_parameter_response_uint8(struct connbee_frame *frame, uint8
 * @return  -1 - no state information could be found
 */
 int32_t connbee_device_state_response(struct connbee_frame *frame, struct connbee_device_state *state);
+
+
+
+/**
+* @brief return the firmware version of the connbee stick
+*
+*/
+int32_t connbee_get_firmware_version(struct connbee_device *dev, struct connbee_version *version);
 
 #endif

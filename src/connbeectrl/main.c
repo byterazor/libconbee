@@ -15,41 +15,46 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <stdio.h>
-#include <connbee.h>
+#include <argparse.h>
+#include <connbeectrl/version.h>
+#include <string.h>
+
+char connbee_device_name[200];
 
 
-int main()
+int main(int argc, char **argv)
 {
+  struct arg_parse_ctx *argparse_ctx = argparse_init();
 
-  struct connbee_device dev;
-  struct connbee_frame *frame;
-  struct connbee_frame *response;
-  int32_t err=0;
+  strncpy(connbee_device_name,"/dev/ttyACM0",12);
 
-  connbee_connect(&dev,"/dev/ttyACM0");
-  printf("Connected\n");
+  // argument for connbee device name
+  struct arg_str device_name = {
+      {ARG_STR,1,0},
+      'd',
+      "device",
+      connbee_device_name,
+      199,
+      "device name of the connbee stick (default: /dev/ttyACM0)"
+  };
+  argparse_add_string(argparse_ctx, &device_name);
+  
+  // create a command argument
+  struct arg_parse_cmd version_cmd= {
+    {0,1,0},                        // 1 = mandatory element
+    0,
+    "version",                         // command name
+    "get firmware version",                  // command description
+    &print_version                          // if found call this function
+  };
 
-  frame     = connbee_device_status_request();
-  response  = connbee_init_frame();
+  /// add the argument command to context
+  argparse_add_command(argparse_ctx, &version_cmd);
 
-  connbee_write_frame(&dev,frame);
-  connbee_read_frame(&dev, response);
+  /// parse the commandline
+  int ret=argparse_parse(argparse_ctx, argc, argv);
 
-  if(connbee_frame_success(response))
-  {
-    printf("payload: ");
-    for(int i=0; i<response->payload_length; i++)
-    {
-      printf("%.2X ", response->payload[i]);
-    }
-    printf("\n");
-  }
-
-  connbee_free_frame(frame);
-  connbee_free_frame(response);
-
-
-  connbee_close(&dev);
-
+  /// free context
+  argparse_free(argparse_ctx);
 
 }

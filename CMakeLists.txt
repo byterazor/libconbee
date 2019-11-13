@@ -25,6 +25,9 @@ build_docs(PROCESS_DOXYFILE DOXYFILE_PATH "docs/Doxyfile.in" )
 include(GNUInstallDirs)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
+add_subdirectory(libs/yaap)
+
+
 # provide all source files for the library
 set(LIBCONNBEE_SOURCES
   src/slip.c
@@ -60,7 +63,7 @@ target_include_directories(connbee
           src
 )
 
-target_link_libraries(connbee ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(connbee ${CMAKE_THREAD_LIBS_INIT} yaap)
 
 target_include_directories(connbee-static
   PUBLIC
@@ -69,10 +72,17 @@ target_include_directories(connbee-static
           src
 )
 
-target_link_libraries(connbee-static ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(connbee-static ${CMAKE_THREAD_LIBS_INIT} yaap)
 
 
 add_executable(connbeectrl
                   src/connbeectrl/main.c
+                  src/connbeectrl/version.h
+                  src/connbeectrl/version.c
 )
+target_include_directories(connbeectrl
+  PRIVATE
+          src
+)
+
 target_link_libraries(connbeectrl connbee-static)

@@ -389,54 +389,7 @@ int32_t connbee_connect(struct connbee_device *dev, char *ttyname);
 */
 void connbee_close(struct connbee_device *dev);
 
-/**
-* @brief helper function to transmit one byte through the tty to the connbee stick
-*
-* @param dev - pointer to a connbee_device structure, please make sure the device is already connected
-* @param  c  - the byte to transfer
-*
-* @return 0   - everything went fine
-* @return -1  - error occured, use errno to find out what
-* @return -2  - connbee device is not connected
-*/
-int32_t connbee_write_byte(struct connbee_device *dev, uint8_t c);
 
-
-/**
-* @brief helper function to receive one byte from the tty to the connbee stick
-*
-* @param dev - pointer to a connbee_device structure, please make sure the device is already connected
-* @param  c  - the byte to receive
-*
-* @return 0   - everything went fine
-* @return -1  - error occured, use errno to find out what
-* @return -2  - connbee device is not connected
-*/
-int32_t connbee_read_byte(struct connbee_device *dev, uint8_t *c);
-
-/**
-* @brief write one frame to the connbee stick
-*
-* @param dev    - the connbee_device to write the frame to, make sure it is already connected
-* @param frame  - the frame to write to the connbee device
-*
-* @return   0 - everything went fine
-* @return  -1 - error occured, use ernno to find out what
-* @return  -2 - connbee device is not connected
-*/
-int32_t connbee_write_frame(struct connbee_device *dev, struct connbee_frame *frame);
-
-/**
-* @brief read one frame from the connbee stick
-*
-* @param dev    - the connbee_device to read the frame from, make sure it is already connected
-* @param frame  - the frame read from the connbee device, the function allocates enough space for the payload if required, free it with connbee_free_frame
-*
-* @return   0 - everything went fine
-* @return  -1 - error occured, use ernno to find out what
-* @return  -2 - connbee device is not connected
-*/
-int32_t connbee_read_frame(struct connbee_device *dev, struct connbee_frame *frame);
 
 
 /**

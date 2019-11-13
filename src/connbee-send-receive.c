@@ -19,6 +19,7 @@
 #include <connbee-send-receive.h>
 #include <connbee.h>
 #include <connbee-queue.h>
+#include <connbee-internal.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>

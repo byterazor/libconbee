@@ -720,4 +720,16 @@ int32_t connbee_get_firmware_version(struct connbee_device *dev, struct connbee_
 */
 int32_t connbee_get_mac_address(struct connbee_device *dev, uint8_t mac[8]);
 
+
+/**
+* @brief return the current configured NWK PANID
+*
+* @param dev - the device from to request the PANID
+* @param panid - pointer to the returned PANID
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t connbee_get_nwk_panid(struct connbee_device *dev, uint16_t *panid);
+
 #endif

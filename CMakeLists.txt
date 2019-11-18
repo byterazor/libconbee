@@ -83,6 +83,8 @@ add_executable(connbeectrl
                   src/connbeectrl/mac.c
                   src/connbeectrl/panid.h
                   src/connbeectrl/panid.c
+                  src/connbeectrl/nwk-address.h
+                  src/connbeectrl/nwk-address.c
 )
 target_include_directories(connbeectrl
   PRIVATE

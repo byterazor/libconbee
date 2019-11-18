@@ -711,4 +711,13 @@ int32_t connbee_device_state_response(struct connbee_frame *frame, struct connbe
 */
 int32_t connbee_get_firmware_version(struct connbee_device *dev, struct connbee_version *version);
 
+
+/**
+* @brief return the MAC Address of the connbee stick
+*
+* @param dev - the device from which to request
+* @param mac - array containing the mac address after calling
+*/
+int32_t connbee_get_mac_address(struct connbee_device *dev, uint8_t mac[8]);
+
 #endif

@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <argparse.h>
 #include <connbeectrl/version.h>
+#include <connbeectrl/mac.h>
 #include <string.h>
 
 char connbee_device_name[200];
@@ -38,7 +39,7 @@ int main(int argc, char **argv)
       "device name of the connbee stick (default: /dev/ttyACM0)"
   };
   argparse_add_string(argparse_ctx, &device_name);
-  
+
   // create a command argument
   struct arg_parse_cmd version_cmd= {
     {0,1,0},                        // 1 = mandatory element
@@ -50,6 +51,18 @@ int main(int argc, char **argv)
 
   /// add the argument command to context
   argparse_add_command(argparse_ctx, &version_cmd);
+
+  // create a command argument
+  struct arg_parse_cmd mac_cmd= {
+    {0,1,0},                        // 1 = mandatory element
+    0,
+    "mac",                          // command name
+    "get sticks mac address",                  // command description
+    &print_mac                          // if found call this function
+  };
+
+  /// add the argument command to context
+  argparse_add_command(argparse_ctx, &mac_cmd);
 
   /// parse the commandline
   int ret=argparse_parse(argparse_ctx, argc, argv);

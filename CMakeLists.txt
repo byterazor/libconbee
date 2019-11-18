@@ -79,6 +79,8 @@ add_executable(connbeectrl
                   src/connbeectrl/main.c
                   src/connbeectrl/version.h
                   src/connbeectrl/version.c
+                  src/connbeectrl/mac.h
+                  src/connbeectrl/mac.c
 )
 target_include_directories(connbeectrl
   PRIVATE

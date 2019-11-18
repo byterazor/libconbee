@@ -18,6 +18,7 @@
  /** @file */
  #include <connbee.h>
  #include <connbee-internal.h>
+ #include <string.h>
 
  /**
  * @brief return the MAC Address of the connbee stick
@@ -43,6 +44,42 @@
    err = connbee_get_version(response, version);
 
    connbee_free_frame(response);
+
+   return err;
+ }
+
+ /**
+ * @brief return the MAC Address of the connbee stick
+ *
+ * @param dev - the device from which to request
+ * @param mac - array containing the mac address after calling
+ */
+ int32_t connbee_get_mac_address(struct connbee_device *dev, uint8_t mac[8])
+ {
+   struct connbee_frame *request  = connbee_read_parameter_request(PARAM_MAC_ADDRESS);
+   struct connbee_frame *response;
+   uint8_t sequence_number = 0;
+   uint8_t err = 0;
+
+   sequence_number = connbee_enqueue_frame(dev, request);
+
+   if(sequence_number < 0)
+   {
+     return sequence_number;
+   }
+
+   err = connbee_wait_for_frame(dev, &response, sequence_number, COMMAND_READ_PARAMETER);
+
+   if (!connbee_frame_success(response))
+   {
+     connbee_free_frame(response);
+     return -1;
+   }
+
+   uint64_t value;
+   err = connbee_read_parameter_response_uint64(response, &value);
+
+   memcpy(mac,(void *)&value,8);
 
    return err;
  }

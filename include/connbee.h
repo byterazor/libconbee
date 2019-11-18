@@ -732,4 +732,15 @@ int32_t connbee_get_mac_address(struct connbee_device *dev, uint8_t mac[8]);
 */
 int32_t connbee_get_nwk_panid(struct connbee_device *dev, uint16_t *panid);
 
+/**
+* @brief return the NWK Address of the stick
+*
+* @param dev - the device from to request the PANID
+* @param addr - pointer to the returned nwk address
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t connbee_get_nwk_address(struct connbee_device *dev, uint16_t *addr);
+
 #endif

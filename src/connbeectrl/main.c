@@ -18,6 +18,7 @@
 #include <argparse.h>
 #include <connbeectrl/version.h>
 #include <connbeectrl/mac.h>
+#include <connbeectrl/panid.h>
 #include <string.h>
 
 char connbee_device_name[200];
@@ -63,6 +64,18 @@ int main(int argc, char **argv)
 
   /// add the argument command to context
   argparse_add_command(argparse_ctx, &mac_cmd);
+
+  // create a command argument
+  struct arg_parse_cmd panid_cmd= {
+    {0,1,0},                        // 1 = mandatory element
+    0,
+    "panid",                          // command name
+    "get current nwk panid",                  // command description
+    &print_panid                          // if found call this function
+  };
+
+  /// add the argument command to context
+  argparse_add_command(argparse_ctx, &panid_cmd);
 
   /// parse the commandline
   int ret=argparse_parse(argparse_ctx, argc, argv);

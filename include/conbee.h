@@ -743,4 +743,15 @@ int32_t conbee_get_nwk_panid(struct conbee_device *dev, uint16_t *panid);
 */
 int32_t conbee_get_nwk_address(struct conbee_device *dev, uint16_t *addr);
 
+/**
+* @brief return the NWK Address of the stick
+*
+* @param dev - the device from to request the NWK EXTENDED PANID
+* @param panid - pointer to the returned nwk extended panid
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t conbee_get_nwk_extended_panid(struct conbee_device *dev, uint64_t *panid);
+
 #endif

@@ -1,8 +1,8 @@
-# libconnbee
+# libconbee
 
 ## Description
 
-The ConnBee2 USB Stick is a Zigbee radio dongle . It supports the communication with
+The ConBee2 USB Stick is a Zigbee radio dongle . It supports the communication with
 Zigbee Light Link (ZLL) devices like Philips HUE and OSRAM Lightify.
 
 This library provides a raw communication interface to the USB dongle to configure
@@ -50,7 +50,7 @@ mkdir build
 cd build
 cmake -D BUILD_DOCUMENTATION=yes ..
 make
-make doc-libconnbee
+make doc-libconbee
 ```
 
 The doxygen documentation can be found under build/doxygen.

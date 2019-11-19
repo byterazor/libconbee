@@ -22,6 +22,7 @@
 #include <conbeectrl/nwk-address.h>
 #include <conbeectrl/nwk_ext_panid.h>
 #include <conbeectrl/network-mode.h>
+#include <conbeectrl/set-network-mode.h>
 #include <string.h>
 
 char conbee_device_name[200];
@@ -116,6 +117,17 @@ int main(int argc, char **argv)
   /// add the argument command to context
   argparse_add_command(argparse_ctx, &network_mode_cmd);
 
+  // create a command argument
+  struct arg_parse_cmd set_network_mode_cmd= {
+    {0,1,0},                        // 1 = mandatory element
+    0,
+    "set-network-mode",                          // command name
+    "set network mode",                  // command description
+    &set_network_mode                          // if found call this function
+  };
+
+  /// add the argument command to context
+  argparse_add_command(argparse_ctx, &set_network_mode_cmd);
 
   /// parse the commandline
   int ret=argparse_parse(argparse_ctx, argc, argv);

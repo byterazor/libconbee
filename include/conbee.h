@@ -777,4 +777,15 @@ int32_t conbee_get_nwk_extended_panid(struct conbee_device *dev, uint64_t *panid
 * @return 0  - everything was fine
 */
 int32_t conbee_get_network_mode(struct conbee_device *dev, uint8_t *mode);
+
+/**
+* @brief set the network mode
+*
+* @param dev - the device for which to set the network mode
+* @param mode - the mode to set
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t conbee_set_network_mode(struct conbee_device *dev, uint8_t mode);
 #endif

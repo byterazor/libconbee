@@ -227,6 +227,19 @@
 
 /** @} */
 
+/**
+ * @defgroup CONNBEE network modes
+ *
+ * @{
+ */
+
+/// the stick is configured as a router
+#define NETWORK_MODE_ROUTER     0x00
+
+/// the stick is configured as a coordinator
+#define NETWORK_MODE_COORDINATOR 0x01
+
+ /** @} */
 
 /**
  * @defgroup CONNBEE routing
@@ -754,4 +767,14 @@ int32_t conbee_get_nwk_address(struct conbee_device *dev, uint16_t *addr);
 */
 int32_t conbee_get_nwk_extended_panid(struct conbee_device *dev, uint64_t *panid);
 
+/**
+* @brief return current network mode
+*
+* @param dev - the device from to request the NWK EXTENDED PANID
+* @param mode - pointer to the returned mode
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t conbee_get_network_mode(struct conbee_device *dev, uint8_t *mode);
 #endif

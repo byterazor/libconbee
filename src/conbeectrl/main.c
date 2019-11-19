@@ -20,6 +20,7 @@
 #include <conbeectrl/mac.h>
 #include <conbeectrl/panid.h>
 #include <conbeectrl/nwk-address.h>
+#include <conbeectrl/nwk_ext_panid.h>
 #include <string.h>
 
 char conbee_device_name[200];
@@ -89,6 +90,18 @@ int main(int argc, char **argv)
 
   /// add the argument command to context
   argparse_add_command(argparse_ctx, &nwk_addr_cmd);
+
+  // create a command argument
+  struct arg_parse_cmd nwk_ext_panid_cmd= {
+    {0,1,0},                        // 1 = mandatory element
+    0,
+    "nwk-ext-panid",                          // command name
+    "get current nwk ext panid",                  // command description
+    &print_nwk_ext_panid                          // if found call this function
+  };
+
+  /// add the argument command to context
+  argparse_add_command(argparse_ctx, &nwk_ext_panid_cmd);
 
   /// parse the commandline
   int ret=argparse_parse(argparse_ctx, argc, argv);

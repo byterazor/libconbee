@@ -85,6 +85,8 @@ add_executable(conbeectrl
                   src/conbeectrl/panid.c
                   src/conbeectrl/nwk-address.h
                   src/conbeectrl/nwk-address.c
+                  src/conbeectrl/nwk_ext_panid.h
+                  src/conbeectrl/nwk_ext_panid.c
 )
 target_include_directories(conbeectrl
   PRIVATE

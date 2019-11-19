@@ -1,7 +1,7 @@
-#ifndef __CONNBEECTRL_VERSION_H__
-#define __CONNBEECTRL_VERSION_H__
+#ifndef __CONNBEE_SEND_RECEIVE_H__
+#define __CONNBEE_SEND_RECEIVE_H__
 /*
- * This file is part of the libconnbee library distribution (https://gitcloud.federationhq.de/byterazor/libconnbee)
+ * This file is part of the libconbee library distribution (https://gitcloud.federationhq.de/byterazor/libconbee)
  * Copyright (c) 2019 Dominik Meyer <dmeyer@federationhq.de>.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,14 @@
  */
 
 /** @file */
-#include<connbee.h>
+#include <conbee.h>
+#include <conbee-queue.h>
 
-int print_version(int argc, char **argv);
-
+/**
+* @brief manage the asynchronous reception and transmission of conbee frames
+*
+* @param arg - void pointer to the conbee_device structure
+*/
+void * conbee_send_receive(void *arg);
 
 #endif

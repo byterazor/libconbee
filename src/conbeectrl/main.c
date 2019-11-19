@@ -1,5 +1,5 @@
 /*
- * This file is part of the libconnbee2 library distribution (https://gitcloud.federationhq.de/byterazor/libconnbee2)
+ * This file is part of the libconbee2 library distribution (https://gitcloud.federationhq.de/byterazor/libconbee2)
  * Copyright (c) 2019 Dominik Meyer <dmeyer@federationhq.de>.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,29 +16,29 @@
  */
 #include <stdio.h>
 #include <argparse.h>
-#include <connbeectrl/version.h>
-#include <connbeectrl/mac.h>
-#include <connbeectrl/panid.h>
-#include <connbeectrl/nwk-address.h>
+#include <conbeectrl/version.h>
+#include <conbeectrl/mac.h>
+#include <conbeectrl/panid.h>
+#include <conbeectrl/nwk-address.h>
 #include <string.h>
 
-char connbee_device_name[200];
+char conbee_device_name[200];
 
 
 int main(int argc, char **argv)
 {
   struct arg_parse_ctx *argparse_ctx = argparse_init();
 
-  strncpy(connbee_device_name,"/dev/ttyACM0",12);
+  strncpy(conbee_device_name,"/dev/ttyACM0",12);
 
-  // argument for connbee device name
+  // argument for conbee device name
   struct arg_str device_name = {
       {ARG_STR,1,0},
       'd',
       "device",
-      connbee_device_name,
+      conbee_device_name,
       199,
-      "device name of the connbee stick (default: /dev/ttyACM0)"
+      "device name of the conbee stick (default: /dev/ttyACM0)"
   };
   argparse_add_string(argparse_ctx, &device_name);
 

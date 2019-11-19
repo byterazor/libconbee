@@ -1,7 +1,7 @@
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = @PROJECT_NAME@
 PROJECT_NUMBER         = "@GIT_BRANCH@ @GIT_COMMIT_HASH@"
-PROJECT_BRIEF          = "library providing access to the connbee2 stick"
+PROJECT_BRIEF          = "library providing access to the conbee2 stick"
 OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@/doxygen/
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES

@@ -1,5 +1,5 @@
 /*
-* This file is part of the libconnbee library distribution (https://gitcloud.federationhq.de/byterazor/libconnbee)
+* This file is part of the libconbee library distribution (https://gitcloud.federationhq.de/byterazor/libconbee)
 * Copyright (c) 2019 Dominik Meyer <dmeyer@federationhq.de>.
 *
 * This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,23 @@
 */
 
 /** @file */
-#include <connbee-send-receive.h>
-#include <connbee.h>
-#include <connbee-queue.h>
-#include <connbee-internal.h>
+#include <conbee-send-receive.h>
+#include <conbee.h>
+#include <conbee-queue.h>
+#include <conbee-internal.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/select.h>
 
 /**
-* @brief manage the asynchronous reception and transmission of connbee frames
+* @brief manage the asynchronous reception and transmission of conbee frames
 *
-* @param arg - void pointer to the connbee_device structure
+* @param arg - void pointer to the conbee_device structure
 */
-void *connbee_send_receive(void *arg)
+void *conbee_send_receive(void *arg)
 {
-  struct connbee_device *dev = (struct connbee_device *) arg;
+  struct conbee_device *dev = (struct conbee_device *) arg;
   uint8_t stop=0;
   fd_set rfds;
   struct timeval tv;
@@ -54,7 +54,7 @@ void *connbee_send_receive(void *arg)
     }
     pthread_mutex_unlock(&dev->mutex_worker);
 
-    // wait for new data on the line from the connbee stick or a transmission request
+    // wait for new data on the line from the conbee stick or a transmission request
     FD_ZERO(&rfds);
     FD_SET(dev->fd, &rfds);
     FD_SET(dev->pipe_send_queue[0], &rfds);
@@ -80,13 +80,13 @@ void *connbee_send_receive(void *arg)
     {
       if (FD_ISSET(dev->fd, &rfds))
       {
-        // a frame from the connbee stick
-        struct connbee_frame *frame = connbee_init_frame();
-        retval=connbee_read_frame(dev, frame);
+        // a frame from the conbee stick
+        struct conbee_frame *frame = conbee_init_frame();
+        retval=conbee_read_frame(dev, frame);
 
         //todo: check retval
         pthread_mutex_lock(&dev->mutex_receive_queue);
-        connbee_queue_push(&dev->receive_queue, (void*) frame);
+        conbee_queue_push(&dev->receive_queue, (void*) frame);
         pthread_cond_signal(&dev->cond_receive_queue);
         pthread_mutex_unlock(&dev->mutex_receive_queue);
 
@@ -100,13 +100,13 @@ void *connbee_send_receive(void *arg)
 
         // get the frame and send
         pthread_mutex_lock(&dev->mutex_send_queue);
-        struct connbee_frame *frame = (struct connbee_frame*) connbee_queue_pop(&dev->send_queue);
+        struct conbee_frame *frame = (struct conbee_frame*) conbee_queue_pop(&dev->send_queue);
         pthread_mutex_unlock(&dev->mutex_send_queue);
         if (frame != NULL)
         {
-          retval=connbee_write_frame(dev, frame);
+          retval=conbee_write_frame(dev, frame);
           // TODO: check retval
-          connbee_free_frame(frame);
+          conbee_free_frame(frame);
         }
       }
     }

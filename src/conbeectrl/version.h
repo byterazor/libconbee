@@ -1,7 +1,7 @@
-#ifndef __CONNBEECTRL_PANID_H__
-#define __CONNBEECTRL_PANID_H__
+#ifndef __CONNBEECTRL_VERSION_H__
+#define __CONNBEECTRL_VERSION_H__
 /*
- * This file is part of the libconnbee library distribution (https://gitcloud.federationhq.de/byterazor/libconnbee)
+ * This file is part of the libconbee library distribution (https://gitcloud.federationhq.de/byterazor/libconbee)
  * Copyright (c) 2019 Dominik Meyer <dmeyer@federationhq.de>.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,9 @@
  */
 
 /** @file */
-#include<connbee.h>
+#include<conbee.h>
 
-int print_panid(int argc, char **argv);
+int print_version(int argc, char **argv);
 
 
 #endif

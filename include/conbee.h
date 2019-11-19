@@ -1,7 +1,7 @@
 #ifndef __CONNBEE_H__
 #define __CONNBEE_H__
 /*
- * This file is part of the libconnbee library distribution (https://gitcloud.federationhq.de/byterazor/libconnbee)
+ * This file is part of the libconbee library distribution (https://gitcloud.federationhq.de/byterazor/libconbee)
  * Copyright (c) 2019 Dominik Meyer <dmeyer@federationhq.de>.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 /** @file */
 
 #include <stdint.h>
-#include <connbee-queue.h>
+#include <conbee-queue.h>
 #include <pthread.h>
 #include <unistd.h>
 
@@ -118,10 +118,10 @@
  * @{
  */
 
-/// the used plattform is connbee or RASPBEE
+/// the used plattform is conbee or RASPBEE
 #define PLATFORM_RASPBEE              0x05
 
-/// the used plattform is the connbee2 stick
+/// the used plattform is the conbee2 stick
 #define PLATFORM_CONNBEE2             0x07
 /** @} */
 
@@ -241,12 +241,12 @@
 
 
 /**
-* @brief a connbee device represented by the name of the uart/tty device
+* @brief a conbee device represented by the name of the uart/tty device
 *
 */
-struct connbee_device
+struct conbee_device
 {
-  /// the name of the tty device the connbee stick is connected to like /dev/ttyACM0
+  /// the name of the tty device the conbee stick is connected to like /dev/ttyACM0
   char tty[200];
 
   /// file descriptor to the opened tty device
@@ -255,14 +255,14 @@ struct connbee_device
   /// status of the tty
   int8_t tty_status;
 
-  /// pointer to the connbee_write_byte function
-  int32_t (*write_byte)(struct connbee_device *,uint8_t);
+  /// pointer to the conbee_write_byte function
+  int32_t (*write_byte)(struct conbee_device *,uint8_t);
 
-  /// pointer to the connbee_read_byte function
-  int32_t (*read_byte)(struct connbee_device *,uint8_t *);
+  /// pointer to the conbee_read_byte function
+  int32_t (*read_byte)(struct conbee_device *,uint8_t *);
 
   /// queue for all frames which should be transmitted
-  struct connbee_queue_root send_queue;
+  struct conbee_queue_root send_queue;
 
   /// mutex protecting the send_queue
   pthread_mutex_t mutex_send_queue;
@@ -275,7 +275,7 @@ struct connbee_device
   pthread_mutex_t mutex_send_pipe;
 
   /// queue for all frame which have been received
-  struct connbee_queue_root receive_queue;
+  struct conbee_queue_root receive_queue;
 
   /// mutex protecting the send_queue
   pthread_mutex_t mutex_receive_queue;
@@ -306,9 +306,9 @@ struct connbee_device
 
 
 /**
-* @brief a connbee frame buffer
+* @brief a conbee frame buffer
 */
-struct connbee_frame
+struct conbee_frame
 {
   /// the command this frame belongs to
   uint8_t   command;
@@ -331,9 +331,9 @@ struct connbee_frame
 };
 
 /**
-* @brief connbee version information
+* @brief conbee version information
 */
-struct connbee_version
+struct conbee_version
 {
   /// the major number of the version
   uint8_t major;
@@ -341,7 +341,7 @@ struct connbee_version
   /// the minor number of the version
   uint8_t minor;
 
-  /// which platform is the connbee running on
+  /// which platform is the conbee running on
   uint8_t platform;
 
   /// has to be initialized to zero
@@ -349,10 +349,10 @@ struct connbee_version
 };
 
 /**
-* @brief connbee device state
+* @brief conbee device state
 *
 */
-struct connbee_device_state
+struct conbee_device_state
 {
   /// current state of the network
   uint8_t network_state;
@@ -371,23 +371,23 @@ struct connbee_device_state
 };
 
 /**
-* @brief function to connect to the connbee stick on the given tty
+* @brief function to connect to the conbee stick on the given tty
 *
-* @param dev     - pointer to a connbee_device structure, please make memory is already allocated
-* @param ttyname - c string containing the full path to the tty device of the connbee stick
+* @param dev     - pointer to a conbee_device structure, please make memory is already allocated
+* @param ttyname - c string containing the full path to the tty device of the conbee stick
 *
 * @return < 0 - an error occured, use errno to get the error code of the system
 * @return   0 - everything went fine
 */
-int32_t connbee_connect(struct connbee_device *dev, char *ttyname);
+int32_t conbee_connect(struct conbee_device *dev, char *ttyname);
 
 
 /**
-* @brief function to close the connection to the connbee stick
+* @brief function to close the connection to the conbee stick
 *
-* @param dev - pointer to the connbee_device structure of the stick to close
+* @param dev - pointer to the conbee_device structure of the stick to close
 */
-void connbee_close(struct connbee_device *dev);
+void conbee_close(struct conbee_device *dev);
 
 
 
@@ -398,30 +398,30 @@ void connbee_close(struct connbee_device *dev);
 * do not use or free the frame after calling this function
 * the frame is freed after the real transmission happened without user intervention
 *
-* @param dev    - the connbee_device to read the frame from, make sure it is already connected
+* @param dev    - the conbee_device to read the frame from, make sure it is already connected
 * @param frame  - the frame to enqueue for transmission
 *
 * @return   0 - everything went fine, frame is enqueue
 * @return  -1 - error occured, use ernno to find out what
-* @return  -2 - connbee device is not connected
+* @return  -2 - conbee device is not connected
 */
-int32_t connbee_enqueue_frame(struct connbee_device *dev, struct connbee_frame *frame);
+int32_t conbee_enqueue_frame(struct conbee_device *dev, struct conbee_frame *frame);
 
 /**
 * @brief wait for the reception of a specific frame
 *
 * free the frame after processing !!!
 *
-* @param dev                        - the connbee_device to read the frame from, make sure it is already connected
+* @param dev                        - the conbee_device to read the frame from, make sure it is already connected
 * @param frame                      - the frame received
 * @param sequence_number            - wait for this sequence number
 * @param command                    - wait for this command type
 *
 * @return   0 - everything went fine, frame is enqueue
 * @return  -1 - error occured, use ernno to find out what
-* @return  -2 - connbee device is not connected
+* @return  -2 - conbee device is not connected
 */
-int32_t connbee_wait_for_frame(struct connbee_device *dev, struct connbee_frame **frame, uint8_t sequence_number, uint8_t command);
+int32_t conbee_wait_for_frame(struct conbee_device *dev, struct conbee_frame **frame, uint8_t sequence_number, uint8_t command);
 
 
 /**
@@ -432,7 +432,7 @@ int32_t connbee_wait_for_frame(struct connbee_device *dev, struct connbee_frame 
 * @return 0 - status is not success
 * @return 1 - status is success
 */
-uint8_t connbee_frame_success(struct connbee_frame *frame);
+uint8_t conbee_frame_success(struct conbee_frame *frame);
 
 /**
 * @brief check if the frame status is failure
@@ -442,7 +442,7 @@ uint8_t connbee_frame_success(struct connbee_frame *frame);
 * @return 0 - status is not failure
 * @return 1 - status is failure
 */
-uint8_t connbee_frame_failure(struct connbee_frame *frame);
+uint8_t conbee_frame_failure(struct conbee_frame *frame);
 
 /**
 * @brief check if the frame status is busy
@@ -452,7 +452,7 @@ uint8_t connbee_frame_failure(struct connbee_frame *frame);
 * @return 0 - status is not busy
 * @return 1 - status is busy
 */
-uint8_t connbee_frame_busy(struct connbee_frame *frame);
+uint8_t conbee_frame_busy(struct conbee_frame *frame);
 
 /**
 * @brief check if the frame status is timeout
@@ -462,7 +462,7 @@ uint8_t connbee_frame_busy(struct connbee_frame *frame);
 * @return 0 - status is not timeout
 * @return 1 - status is timeout
 */
-uint8_t connbee_frame_timeout(struct connbee_frame *frame);
+uint8_t conbee_frame_timeout(struct conbee_frame *frame);
 
 /**
 * @brief check if the frame status is unsupported
@@ -472,7 +472,7 @@ uint8_t connbee_frame_timeout(struct connbee_frame *frame);
 * @return 0 - status is not unsupported
 * @return 1 - status is unsupported
 */
-uint8_t connbee_frame_unsupported(struct connbee_frame *frame);
+uint8_t conbee_frame_unsupported(struct conbee_frame *frame);
 
 /**
 * @brief check if the frame status is error
@@ -482,7 +482,7 @@ uint8_t connbee_frame_unsupported(struct connbee_frame *frame);
 * @return 0 - status is not error
 * @return 1 - status is error
 */
-uint8_t connbee_frame_error(struct connbee_frame *frame);
+uint8_t conbee_frame_error(struct conbee_frame *frame);
 
 /**
 * @brief check if the frame status is nonetwork
@@ -492,7 +492,7 @@ uint8_t connbee_frame_error(struct connbee_frame *frame);
 * @return 0 - status is not nonetwork
 * @return 1 - status is nonetwork
 */
-uint8_t connbee_frame_nonetwork(struct connbee_frame *frame);
+uint8_t conbee_frame_nonetwork(struct conbee_frame *frame);
 
 /**
 * @brief check if the frame status is invalid value
@@ -502,7 +502,7 @@ uint8_t connbee_frame_nonetwork(struct connbee_frame *frame);
 * @return 0 - status is not invalid value
 * @return 1 - status is invalid value
 */
-uint8_t connbee_frame_invalidvalue(struct connbee_frame *frame);
+uint8_t conbee_frame_invalidvalue(struct conbee_frame *frame);
 
 
 /**
@@ -514,15 +514,15 @@ uint8_t connbee_frame_invalidvalue(struct connbee_frame *frame);
 * @return 0   - version information are valid and everything is fine
 * @return -1  - no version information could be found
 */
-int32_t connbee_get_version(struct connbee_frame *frame, struct connbee_version *version);
+int32_t conbee_get_version(struct conbee_frame *frame, struct conbee_version *version);
 
 
 /**
-* @brief initialize a basic connbee frame, please always use this method for creating frame
+* @brief initialize a basic conbee frame, please always use this method for creating frame
 *
 * @return pointer to the initialized frame
 */
-struct connbee_frame * connbee_init_frame();
+struct conbee_frame * conbee_init_frame();
 
 
 /**
@@ -533,7 +533,7 @@ struct connbee_frame * connbee_init_frame();
 *
 * @param frame - pointer to the frame to free
 */
-void connbee_free_frame(struct connbee_frame *frame);
+void conbee_free_frame(struct conbee_frame *frame);
 
 /**
 * @brief create a frame for requeting the firmware version
@@ -542,7 +542,7 @@ void connbee_free_frame(struct connbee_frame *frame);
 *
 * @return pointer to the frame for requesting the firmware version
 */
-struct connbee_frame * connbee_read_firmware_request();
+struct conbee_frame * conbee_read_firmware_request();
 
 /**
 * @brief create a frame for requesting reading a device parameter
@@ -551,7 +551,7 @@ struct connbee_frame * connbee_read_firmware_request();
 *
 * @return pointer to the frame for requesting the a device parameter
 */
-struct connbee_frame * connbee_read_parameter_request(uint8_t parameter);
+struct conbee_frame * conbee_read_parameter_request(uint8_t parameter);
 
 /**
 * @brief create a frame for requesting writing a device parameter
@@ -564,7 +564,7 @@ struct connbee_frame * connbee_read_parameter_request(uint8_t parameter);
 *
 * @return pointer to the frame for requesting the a device parameter
 */
-struct connbee_frame * connbee_write_parameter_request(uint8_t parameter, uint8_t *value, uint8_t value_size);
+struct conbee_frame * conbee_write_parameter_request(uint8_t parameter, uint8_t *value, uint8_t value_size);
 
 /**
 * @brief create a frame for requesting writing a device parameter of value uint8_t
@@ -576,7 +576,7 @@ struct connbee_frame * connbee_write_parameter_request(uint8_t parameter, uint8_
 *
 * @return pointer to the frame for requesting the a device parameter
 */
-struct connbee_frame * connbee_write_parameter_request_uint8(uint8_t parameter, uint8_t *value);
+struct conbee_frame * conbee_write_parameter_request_uint8(uint8_t parameter, uint8_t *value);
 
 
 /**
@@ -589,7 +589,7 @@ struct connbee_frame * connbee_write_parameter_request_uint8(uint8_t parameter, 
 *
 * @return pointer to the frame for requesting the a device parameter
 */
-struct connbee_frame * connbee_write_parameter_request_uint16(uint8_t parameter, uint16_t *value);
+struct conbee_frame * conbee_write_parameter_request_uint16(uint8_t parameter, uint16_t *value);
 
 /**
 * @brief create a frame for requesting writing a device parameter of value uint32_t
@@ -601,7 +601,7 @@ struct connbee_frame * connbee_write_parameter_request_uint16(uint8_t parameter,
 *
 * @return pointer to the frame for requesting the a device parameter
 */
-struct connbee_frame * connbee_write_parameter_request_uint32(uint8_t parameter, uint32_t *value);
+struct conbee_frame * conbee_write_parameter_request_uint32(uint8_t parameter, uint32_t *value);
 
 /**
 * @brief create a frame for requesting writing a device parameter of value uint64_t
@@ -613,7 +613,7 @@ struct connbee_frame * connbee_write_parameter_request_uint32(uint8_t parameter,
 *
 * @return pointer to the frame for requesting the a device parameter
 */
-struct connbee_frame * connbee_write_parameter_request_uint64(uint8_t parameter, uint64_t *value);
+struct conbee_frame * conbee_write_parameter_request_uint64(uint8_t parameter, uint64_t *value);
 
 /**
 * @brief create a frame for requesting the device status
@@ -622,7 +622,7 @@ struct connbee_frame * connbee_write_parameter_request_uint64(uint8_t parameter,
 *
 * @return pointer to the frame for requesting the device status
 */
-struct connbee_frame * connbee_device_status_request();
+struct conbee_frame * conbee_device_status_request();
 
 /**
 * @brief create a frame for requesting to create/join a network
@@ -631,7 +631,7 @@ struct connbee_frame * connbee_device_status_request();
 *
 * @return pointer to the frame for requesting the network creation/joining
 */
-struct connbee_frame * connbee_device_network_join_create_request();
+struct conbee_frame * conbee_device_network_join_create_request();
 
 /**
 * @brief create a frame for requesting to leave a network
@@ -640,7 +640,7 @@ struct connbee_frame * connbee_device_network_join_create_request();
 *
 * @return pointer to the frame for requesting the network leaving
 */
-struct connbee_frame * connbee_device_network_leave_request();
+struct conbee_frame * conbee_device_network_leave_request();
 
 /**
 * @brief create a frame for requesting available APS data
@@ -649,7 +649,7 @@ struct connbee_frame * connbee_device_network_leave_request();
 *
 * @return pointer to the frame for requesting the aps data
 */
-struct connbee_frame * connbee_device_get_aps_data_request();
+struct conbee_frame * conbee_device_get_aps_data_request();
 
 /**
 * @brief parse a read_parameter_response into a uint64_t
@@ -659,7 +659,7 @@ struct connbee_frame * connbee_device_get_aps_data_request();
 * @return   0 - everything worked fine
 * @return  -1 - no value of this type available in frame
 */
-int32_t connbee_read_parameter_response_uint64(struct connbee_frame *frame, uint64_t *data);
+int32_t conbee_read_parameter_response_uint64(struct conbee_frame *frame, uint64_t *data);
 
 /**
 * @brief parse a read_parameter_response into a uint32_t
@@ -669,7 +669,7 @@ int32_t connbee_read_parameter_response_uint64(struct connbee_frame *frame, uint
 * @return   0 - everything worked fine
 * @return  -1 - no value of this type available in frame
 */
-int32_t connbee_read_parameter_response_uint32(struct connbee_frame *frame, uint32_t *data);
+int32_t conbee_read_parameter_response_uint32(struct conbee_frame *frame, uint32_t *data);
 
 /**
 * @brief parse a read_parameter_response into a uint16_t
@@ -679,7 +679,7 @@ int32_t connbee_read_parameter_response_uint32(struct connbee_frame *frame, uint
 * @return   0 - everything worked fine
 * @return  -1 - no value of this type available in frame
 */
-int32_t connbee_read_parameter_response_uint16(struct connbee_frame *frame, uint16_t *data);
+int32_t conbee_read_parameter_response_uint16(struct conbee_frame *frame, uint16_t *data);
 
 /**
 * @brief parse a read_parameter_response into a uint8_t
@@ -689,7 +689,7 @@ int32_t connbee_read_parameter_response_uint16(struct connbee_frame *frame, uint
 * @return   0 - everything worked fine
 * @return  -1 - no value of this type available in frame
 */
-int32_t connbee_read_parameter_response_uint8(struct connbee_frame *frame, uint8_t *data);
+int32_t conbee_read_parameter_response_uint8(struct conbee_frame *frame, uint8_t *data);
 
 
 /**
@@ -701,24 +701,24 @@ int32_t connbee_read_parameter_response_uint8(struct connbee_frame *frame, uint8
 * @return   0 - everything worked fine
 * @return  -1 - no state information could be found
 */
-int32_t connbee_device_state_response(struct connbee_frame *frame, struct connbee_device_state *state);
+int32_t conbee_device_state_response(struct conbee_frame *frame, struct conbee_device_state *state);
 
 
 
 /**
-* @brief return the firmware version of the connbee stick
+* @brief return the firmware version of the conbee stick
 *
 */
-int32_t connbee_get_firmware_version(struct connbee_device *dev, struct connbee_version *version);
+int32_t conbee_get_firmware_version(struct conbee_device *dev, struct conbee_version *version);
 
 
 /**
-* @brief return the MAC Address of the connbee stick
+* @brief return the MAC Address of the conbee stick
 *
 * @param dev - the device from which to request
 * @param mac - array containing the mac address after calling
 */
-int32_t connbee_get_mac_address(struct connbee_device *dev, uint8_t mac[8]);
+int32_t conbee_get_mac_address(struct conbee_device *dev, uint8_t mac[8]);
 
 
 /**
@@ -730,7 +730,7 @@ int32_t connbee_get_mac_address(struct connbee_device *dev, uint8_t mac[8]);
 * @return -1 - an error occured
 * @return 0  - everything was fine
 */
-int32_t connbee_get_nwk_panid(struct connbee_device *dev, uint16_t *panid);
+int32_t conbee_get_nwk_panid(struct conbee_device *dev, uint16_t *panid);
 
 /**
 * @brief return the NWK Address of the stick
@@ -741,6 +741,6 @@ int32_t connbee_get_nwk_panid(struct connbee_device *dev, uint16_t *panid);
 * @return -1 - an error occured
 * @return 0  - everything was fine
 */
-int32_t connbee_get_nwk_address(struct connbee_device *dev, uint16_t *addr);
+int32_t conbee_get_nwk_address(struct conbee_device *dev, uint16_t *addr);
 
 #endif

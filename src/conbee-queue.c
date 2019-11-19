@@ -1,5 +1,5 @@
 /*
- * This file is part of the libconnbee library distribution (https://gitcloud.federationhq.de/byterazor/libconnbee)
+ * This file is part of the libconbee library distribution (https://gitcloud.federationhq.de/byterazor/libconbee)
  * Copyright (c) 2019 Dominik Meyer <dmeyer@federationhq.de>.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  */
 
  /** @file */
-#include <connbee-queue.h>
+#include <conbee-queue.h>
 #include <stdlib.h>
 
 /**
@@ -24,7 +24,7 @@
 *
 * @param queue - pointer to the queue
 */
-void connbee_queue_init(struct connbee_queue_root* queue){
+void conbee_queue_init(struct conbee_queue_root* queue){
 	queue->head = queue->tail = NULL;
 }
 
@@ -34,8 +34,8 @@ void connbee_queue_init(struct connbee_queue_root* queue){
 * @param queue - pointer to the head of the queue
 * @param contents - the content to enqueue
 */
-void connbee_queue_push(struct connbee_queue_root* queue, void *content){
-	struct connbee_queue_item *item = malloc(sizeof(item));
+void conbee_queue_push(struct conbee_queue_root* queue, void *content){
+	struct conbee_queue_item *item = malloc(sizeof(item));
 	item->contents = content;
 	item->next     = NULL;
   item->previous = NULL;
@@ -55,13 +55,13 @@ void connbee_queue_push(struct connbee_queue_root* queue, void *content){
 *
 * @return pointer to the content
 */
-void * connbee_queue_pop(struct connbee_queue_root* queue){
+void * conbee_queue_pop(struct conbee_queue_root* queue){
 	void * popped;
 	if (queue->head == NULL){
 		return NULL; // causes a compile warning.  Just check for ==NULL when popping.
 	} else {
 		popped = queue->head->contents;
-		struct connbee_queue_item* next = queue->head->next;
+		struct conbee_queue_item* next = queue->head->next;
 		free(queue->head);
 		queue->head = next;
 		if (queue->head == NULL)
@@ -78,7 +78,7 @@ void * connbee_queue_pop(struct connbee_queue_root* queue){
 * @param item   - queue element to delete
 *
 */
-void connbee_queue_delete(struct connbee_queue_root *queue, struct connbee_queue_item *item)
+void conbee_queue_delete(struct conbee_queue_root *queue, struct conbee_queue_item *item)
 {
   if (item->previous == NULL)
   {

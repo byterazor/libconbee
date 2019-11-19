@@ -1,7 +1,7 @@
 #ifndef __CONNBEE_QUEUE_H__
 #define __CONNBEE_QUEUE_H__
 /*
- * This file is part of the libconnbee library distribution (https://gitcloud.federationhq.de/byterazor/libconnbee)
+ * This file is part of the libconbee library distribution (https://gitcloud.federationhq.de/byterazor/libconbee)
  * Copyright (c) 2019 Dominik Meyer <dmeyer@federationhq.de>.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,25 +22,25 @@
 /**
 * @brief structure representing one element of the queue
 */
-struct connbee_queue_item {
+struct conbee_queue_item {
   /// pointer to the actual queue data
 	void *contents;
 
   /// link to the next element in the queue
-	struct connbee_queue_item* next;
+	struct conbee_queue_item* next;
 
   /// link to the previous element in the queue
-  struct connbee_queue_item* previous;
+  struct conbee_queue_item* previous;
 };
 
 /// structure representing the root of a queue with links to head and tail
-struct connbee_queue_root {
+struct conbee_queue_root {
 
   /// link to the head of the queue
-	struct connbee_queue_item* head;
+	struct conbee_queue_item* head;
 
   /// link to the tail of the queue
-	struct connbee_queue_item* tail;
+	struct conbee_queue_item* tail;
 };
 
 /**
@@ -48,7 +48,7 @@ struct connbee_queue_root {
 *
 * @param queue - pointer to the queue
 */
-void connbee_queue_init(struct connbee_queue_root* queue);
+void conbee_queue_init(struct conbee_queue_root* queue);
 
 
 /**
@@ -57,7 +57,7 @@ void connbee_queue_init(struct connbee_queue_root* queue);
 * @param queue - pointer to the head of the queue
 * @param contents - the content to enqueue
 */
-void connbee_queue_push(struct connbee_queue_root* queue, void *content);
+void conbee_queue_push(struct conbee_queue_root* queue, void *content);
 
 /**
 * @brief pop content from the queue
@@ -66,7 +66,7 @@ void connbee_queue_push(struct connbee_queue_root* queue, void *content);
 *
 * @return pointer to the content
 */
-void * connbee_queue_pop(struct connbee_queue_root* queue);
+void * conbee_queue_pop(struct conbee_queue_root* queue);
 
 /**
 * @brief delete item from queue
@@ -75,6 +75,6 @@ void * connbee_queue_pop(struct connbee_queue_root* queue);
 * @param item   - queue element to delete
 *
 */
-void connbee_queue_delete(struct connbee_queue_root *queue, struct connbee_queue_item *item);
+void conbee_queue_delete(struct conbee_queue_root *queue, struct conbee_queue_item *item);
 
 #endif

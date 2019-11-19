@@ -1,4 +1,4 @@
-# This file is part of the libconnbee library distribution (https://gitcloud.federationhq.de/byterazor/libconnbee)
+# This file is part of the libconbee library distribution (https://gitcloud.federationhq.de/byterazor/libconbee)
 # Copyright (c) 2019 Dominik Meyer <dmeyer@federationhq.de>.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required (VERSION 3.1 FATAL_ERROR)
-project (libconnbee VERSION 0.1.0 LANGUAGES  C)
+project (libconbee VERSION 0.1.0 LANGUAGES  C)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
 find_package(Threads)
@@ -34,13 +34,13 @@ set(LIBCONNBEE_SOURCES
   src/slip.h
   src/crc16.h
   src/crc16.c
-  include/connbee-queue.h
-  src/connbee-queue.c
-  src/connbee-send-receive.h
-  src/connbee-send-receive.c
-  src/connbee-functions.c
-  include/connbee.h
-  src/connbee.c
+  include/conbee-queue.h
+  src/conbee-queue.c
+  src/conbee-send-receive.h
+  src/conbee-send-receive.c
+  src/conbee-functions.c
+  include/conbee.h
+  src/conbee.c
 )
 
 add_library(objlib OBJECT ${LIBCONNBEE_SOURCES})
@@ -53,42 +53,42 @@ target_include_directories(objlib
 )
 
 
-add_library(connbee SHARED $<TARGET_OBJECTS:objlib>)
-add_library(connbee-static STATIC $<TARGET_OBJECTS:objlib>)
+add_library(conbee SHARED $<TARGET_OBJECTS:objlib>)
+add_library(conbee-static STATIC $<TARGET_OBJECTS:objlib>)
 
-target_include_directories(connbee
+target_include_directories(conbee
   PUBLIC
           include
   PRIVATE
           src
 )
 
-target_link_libraries(connbee ${CMAKE_THREAD_LIBS_INIT} yaap)
+target_link_libraries(conbee ${CMAKE_THREAD_LIBS_INIT} yaap)
 
-target_include_directories(connbee-static
+target_include_directories(conbee-static
   PUBLIC
           include
   PRIVATE
           src
 )
 
-target_link_libraries(connbee-static ${CMAKE_THREAD_LIBS_INIT} yaap)
+target_link_libraries(conbee-static ${CMAKE_THREAD_LIBS_INIT} yaap)
 
 
-add_executable(connbeectrl
-                  src/connbeectrl/main.c
-                  src/connbeectrl/version.h
-                  src/connbeectrl/version.c
-                  src/connbeectrl/mac.h
-                  src/connbeectrl/mac.c
-                  src/connbeectrl/panid.h
-                  src/connbeectrl/panid.c
-                  src/connbeectrl/nwk-address.h
-                  src/connbeectrl/nwk-address.c
+add_executable(conbeectrl
+                  src/conbeectrl/main.c
+                  src/conbeectrl/version.h
+                  src/conbeectrl/version.c
+                  src/conbeectrl/mac.h
+                  src/conbeectrl/mac.c
+                  src/conbeectrl/panid.h
+                  src/conbeectrl/panid.c
+                  src/conbeectrl/nwk-address.h
+                  src/conbeectrl/nwk-address.c
 )
-target_include_directories(connbeectrl
+target_include_directories(conbeectrl
   PRIVATE
           src
 )
 
-target_link_libraries(connbeectrl connbee-static)
+target_link_libraries(conbeectrl conbee-static)

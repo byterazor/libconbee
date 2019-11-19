@@ -1,22 +1,22 @@
-#include <connbee.h>
+#include <conbee.h>
 #include <string.h>
 #include <stdio.h>
 
-extern char connbee_device_name[200];
+extern char conbee_device_name[200];
 
 int print_mac(int argc, char **argv)
 {
-  struct connbee_device dev;
+  struct conbee_device dev;
   uint8_t mac[8];
   int32_t err;
 
-  err = connbee_connect(&dev, connbee_device_name);
+  err = conbee_connect(&dev, conbee_device_name);
   if (err < 0)
   {
     return -1;
   }
 
-  err = connbee_get_mac_address(&dev,mac);
+  err = conbee_get_mac_address(&dev,mac);
   if (err < 0)
   {
     fprintf(stderr, "Error getting mac address\n");
@@ -31,7 +31,7 @@ int print_mac(int argc, char **argv)
     printf("\n");
   }
 
-  connbee_close(&dev);
+  conbee_close(&dev);
 
   return 0;
 }

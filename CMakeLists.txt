@@ -87,6 +87,8 @@ add_executable(conbeectrl
                   src/conbeectrl/nwk-address.c
                   src/conbeectrl/nwk_ext_panid.h
                   src/conbeectrl/nwk_ext_panid.c
+                  src/conbeectrl/network-mode.h
+                  src/conbeectrl/network-mode.c
 )
 target_include_directories(conbeectrl
   PRIVATE

@@ -91,6 +91,8 @@ add_executable(conbeectrl
                   src/conbeectrl/network-mode.c
                   src/conbeectrl/set-network-mode.h
                   src/conbeectrl/set-network-mode.c
+                  src/conbeectrl/channel-mask.h
+                  src/conbeectrl/channel-mask.c
 )
 target_include_directories(conbeectrl
   PRIVATE

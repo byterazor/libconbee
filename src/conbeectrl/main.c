@@ -24,6 +24,7 @@
 #include <conbeectrl/network-mode.h>
 #include <conbeectrl/set-network-mode.h>
 #include <conbeectrl/channel-mask.h>
+#include <conbeectrl/set-channel-mask.h>
 #include <string.h>
 
 char conbee_device_name[200];
@@ -142,6 +143,18 @@ int main(int argc, char **argv)
 
   /// add the argument command to context
   argparse_add_command(argparse_ctx, &get_channel_mask_cmd);
+
+  // create a command argument
+  struct arg_parse_cmd set_channel_mask_cmd= {
+    {0,1,0},                        // 1 = mandatory element
+    0,
+    "set-channel-mask",                          // command name
+    "set channel mask",                  // command description
+    &set_channel_mask                          // if found call this function
+  };
+
+  /// add the argument command to context
+  argparse_add_command(argparse_ctx, &set_channel_mask_cmd);
 
   /// parse the commandline
   int ret=argparse_parse(argparse_ctx, argc, argv);

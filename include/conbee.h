@@ -788,4 +788,17 @@ int32_t conbee_get_network_mode(struct conbee_device *dev, uint8_t *mode);
 * @return 0  - everything was fine
 */
 int32_t conbee_set_network_mode(struct conbee_device *dev, uint8_t mode);
+
+/**
+* @brief return current channel mask
+*
+* @param dev - the device from to request the NWK EXTENDED PANID
+* @param mask - pointer to the returned channel mask
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t conbee_get_channel_mask(struct conbee_device *dev, uint32_t *mask);
+
+
 #endif

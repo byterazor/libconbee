@@ -23,7 +23,7 @@ int print_channel_mask(int argc, char **argv)
   }
   else
   {
-    printf("Current Channel Mask: %u(%.4X)\n", mask,mask);
+    printf("Current Channel Mask: %u(0x%.8X)\n", mask,mask);
   }
 
   conbee_close(&dev);

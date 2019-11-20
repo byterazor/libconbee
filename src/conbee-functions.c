@@ -299,3 +299,39 @@
 
    return err;
  }
+
+ /**
+ * @brief set the channel mask
+ *
+ * @param dev - the device for which to set the network mode
+ * @param mask - the mask to set
+ *
+ * @return -1 - an error occured
+ * @return 0  - everything was fine
+ */
+ int32_t conbee_set_channel_mask(struct conbee_device *dev, uint32_t mask)
+ {
+   struct conbee_frame *request  = conbee_write_parameter_request_uint32(PARAM_CHANNEL_MASK, &mask);
+   struct conbee_frame *response;
+   uint8_t sequence_number = 0;
+   uint8_t err = 0;
+
+   sequence_number = conbee_enqueue_frame(dev, request);
+
+   if(sequence_number < 0)
+   {
+     return sequence_number;
+   }
+
+   err = conbee_wait_for_frame(dev, &response, sequence_number, COMMAND_WRITE_PARAMETER);
+
+   if (!conbee_frame_success(response))
+   {
+     conbee_free_frame(response);
+     return -1;
+   }
+
+   conbee_free_frame(response);
+
+   return err;
+ }

@@ -800,5 +800,15 @@ int32_t conbee_set_network_mode(struct conbee_device *dev, uint8_t mode);
 */
 int32_t conbee_get_channel_mask(struct conbee_device *dev, uint32_t *mask);
 
+/**
+* @brief set the channel mask
+*
+* @param dev - the device for which to set the network mode
+* @param mask - the mask to set
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t conbee_set_channel_mask(struct conbee_device *dev, uint32_t mask);
 
 #endif

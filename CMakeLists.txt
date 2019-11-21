@@ -99,6 +99,8 @@ add_executable(conbeectrl
                   src/conbeectrl/aps_ext_panid.c
                   src/conbeectrl/set-aps-ext-panid.h
                   src/conbeectrl/set-aps-ext-panid.c
+                  src/conbeectrl/tc-address.h
+                  src/conbeectrl/tc-address.c
 )
 target_include_directories(conbeectrl
   PRIVATE

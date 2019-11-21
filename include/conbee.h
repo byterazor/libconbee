@@ -822,4 +822,16 @@ int32_t conbee_set_channel_mask(struct conbee_device *dev, uint32_t mask);
 */
 int32_t conbee_get_aps_extended_panid(struct conbee_device *dev, uint64_t *panid);
 
+
+/**
+* @brief set the aps ext panid
+*
+* @param dev - the device for which to set the aps ext panid
+* @param mask - the panid to set
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t conbee_set_aps_extended_panid(struct conbee_device *dev, uint64_t panid);
+
 #endif

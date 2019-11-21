@@ -95,6 +95,8 @@ add_executable(conbeectrl
                   src/conbeectrl/channel-mask.c
                   src/conbeectrl/set-channel-mask.h
                   src/conbeectrl/set-channel-mask.c
+                  src/conbeectrl/aps_ext_panid.h
+                  src/conbeectrl/aps_ext_panid.c
 )
 target_include_directories(conbeectrl
   PRIVATE

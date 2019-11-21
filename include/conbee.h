@@ -834,4 +834,16 @@ int32_t conbee_get_aps_extended_panid(struct conbee_device *dev, uint64_t *panid
 */
 int32_t conbee_set_aps_extended_panid(struct conbee_device *dev, uint64_t panid);
 
+
+/**
+* @brief return current trust center address
+*
+* @param dev - the device from to request the trust center address
+* @param mask - pointer to the returned trust center address
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t conbee_get_trust_center_addr(struct conbee_device *dev, uint64_t *addr);
+
 #endif

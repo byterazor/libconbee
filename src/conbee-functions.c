@@ -335,3 +335,39 @@
 
    return err;
  }
+
+ /**
+ * @brief return current aps ext panid
+ *
+ * @param dev - the device from to request the APS EXTENDED PANID
+ * @param mask - pointer to the returned aps ext panid
+ *
+ * @return -1 - an error occured
+ * @return 0  - everything was fine
+ */
+ int32_t conbee_get_aps_extended_panid(struct conbee_device *dev, uint64_t *panid)
+ {
+   struct conbee_frame *request  = conbee_read_parameter_request(PARAM_APS_EXT_PANID);
+   struct conbee_frame *response;
+   uint8_t sequence_number = 0;
+   uint8_t err = 0;
+
+   sequence_number = conbee_enqueue_frame(dev, request);
+
+   if(sequence_number < 0)
+   {
+     return sequence_number;
+   }
+
+   err = conbee_wait_for_frame(dev, &response, sequence_number, COMMAND_READ_PARAMETER);
+
+   if (!conbee_frame_success(response))
+   {
+     conbee_free_frame(response);
+     return -1;
+   }
+
+   err = conbee_read_parameter_response_uint64(response, panid);
+
+   return err;
+ }

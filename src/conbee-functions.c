@@ -443,3 +443,39 @@
 
    return err;
  }
+
+ /**
+ * @brief set the trust center address
+ *
+ * @param dev - the device for which to set the trust center address
+ * @param add - the address to set
+ *
+ * @return -1 - an error occured
+ * @return 0  - everything was fine
+ */
+ int32_t conbee_set_trust_center_addr(struct conbee_device *dev, uint64_t addr)
+ {
+   struct conbee_frame *request  = conbee_write_parameter_request_uint64(PARAM_TRUST_CENTER_ADDRESS, &addr);
+   struct conbee_frame *response;
+   uint8_t sequence_number = 0;
+   uint8_t err = 0;
+
+   sequence_number = conbee_enqueue_frame(dev, request);
+
+   if(sequence_number < 0)
+   {
+     return sequence_number;
+   }
+
+   err = conbee_wait_for_frame(dev, &response, sequence_number, COMMAND_WRITE_PARAMETER);
+
+   if (!conbee_frame_success(response))
+   {
+     conbee_free_frame(response);
+     return -1;
+   }
+
+   conbee_free_frame(response);
+
+   return err;
+ }

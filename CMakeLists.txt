@@ -105,6 +105,8 @@ add_executable(conbeectrl
                   src/conbeectrl/tc-address.c
                   src/conbeectrl/set-trust-center.h
                   src/conbeectrl/set-trust-center.c
+                  src/conbeectrl/security-mode.h
+                  src/conbeectrl/security-mode.c
 )
 target_include_directories(conbeectrl
   PRIVATE

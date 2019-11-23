@@ -858,5 +858,14 @@ int32_t conbee_get_trust_center_addr(struct conbee_device *dev, uint64_t *addr);
 */
 int32_t conbee_set_trust_center_addr(struct conbee_device *dev, uint64_t addr);
 
-
+/**
+* @brief return current security mode
+*
+* @param dev - the device from to request the security mode from
+* @param mode - pointer to the returned security mode
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t conbee_get_security_mode(struct conbee_device *dev, uint8_t *mode);
 #endif

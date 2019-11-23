@@ -22,6 +22,8 @@ find_package(Threads)
 include(doxygen)
 build_docs(PROCESS_DOXYFILE DOXYFILE_PATH "docs/Doxyfile.in" )
 
+include(compdb)
+
 include(GNUInstallDirs)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 

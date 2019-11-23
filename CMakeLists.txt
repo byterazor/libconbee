@@ -103,6 +103,8 @@ add_executable(conbeectrl
                   src/conbeectrl/set-aps-ext-panid.c
                   src/conbeectrl/tc-address.h
                   src/conbeectrl/tc-address.c
+                  src/conbeectrl/set-trust-center.h
+                  src/conbeectrl/set-trust-center.c
 )
 target_include_directories(conbeectrl
   PRIVATE

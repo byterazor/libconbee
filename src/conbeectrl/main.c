@@ -28,6 +28,7 @@
 #include <conbeectrl/aps_ext_panid.h>
 #include <conbeectrl/set-aps-ext-panid.h>
 #include <conbeectrl/tc-address.h>
+#include <conbeectrl/set-trust-center.h>
 #include <string.h>
 
 char conbee_device_name[200];
@@ -195,6 +196,17 @@ int main(int argc, char **argv)
   /// add the argument command to context
   argparse_add_command(argparse_ctx, &tc_addr_cmd);
 
+  // create a command argument
+  struct arg_parse_cmd set_tc_addr_cmd= {
+    {0,1,0},                        // 1 = mandatory element
+    0,
+    "set-tc-addr",                          // command name
+    "set trust center address",                  // command description
+    &set_trust_center                          // if found call this function
+  };
+
+  /// add the argument command to context
+  argparse_add_command(argparse_ctx, &set_tc_addr_cmd);
 
   /// parse the commandline
   int ret=argparse_parse(argparse_ctx, argc, argv);

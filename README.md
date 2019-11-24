@@ -10,6 +10,17 @@ the stick and read and write raw Application Support Layer (APS) frames. This
 library does *not* handle any Zigbee communication. You require an additional library or
 application if you want to do Zigbee communication.
 
+In addition to the library this projects provides a command-line tool to manage conbee stick
+related configurations, e.g. setting the security mode, extended PANIDs, etc.
+
+### Features
+
+- read /write stick related configuration registers
+
+### Supported/ Tested Operating Systems
+
+At the moment this library and tool have only been tested on Linux.
+
 ## Authors
 
 - Dominik Meyer <dmeyer@federationhq.de>

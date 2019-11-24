@@ -515,3 +515,46 @@
 
    return err;
  }
+
+ /**
+ * @brief set the security mode
+ *
+ * Available Modes:
+ *   0 - no security
+ *   1 - preconfigured network key
+ *   2 - network key from trust center
+ *   3 - no master but trust center link key
+ *
+ * @param dev  - the device for which to set the security mode
+ * @param mode - the mode to set
+ *
+ * @return -1 - an error occured
+ * @return 0  - everything was fine
+ */
+ int32_t conbee_set_security_mode(struct conbee_device *dev, uint8_t mode)
+ {
+   struct conbee_frame *request  = conbee_write_parameter_request_uint8(PARAM_SECURITY_MODE, &mode);
+   struct conbee_frame *response;
+   uint8_t sequence_number = 0;
+   uint8_t err = 0;
+
+   sequence_number = conbee_enqueue_frame(dev, request);
+
+   if(sequence_number < 0)
+   {
+     return sequence_number;
+   }
+
+   err = conbee_wait_for_frame(dev, &response, sequence_number, COMMAND_WRITE_PARAMETER);
+
+   if (!conbee_frame_success(response))
+   {
+     conbee_free_frame(response);
+     return -1;
+   }
+
+   conbee_free_frame(response);
+
+   return err;
+
+ }

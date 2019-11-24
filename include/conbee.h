@@ -868,4 +868,22 @@ int32_t conbee_set_trust_center_addr(struct conbee_device *dev, uint64_t addr);
 * @return 0  - everything was fine
 */
 int32_t conbee_get_security_mode(struct conbee_device *dev, uint8_t *mode);
+
+/**
+* @brief set the security mode
+*
+* Available Modes:
+*   0 - no security
+*   1 - preconfigured network key
+*   2 - network key from trust center
+*   3 - no master but trust center link key
+*
+* @param dev  - the device for which to set the security mode
+* @param mode - the mode to set
+*
+* @return -1 - an error occured
+* @return 0  - everything was fine
+*/
+int32_t conbee_set_security_mode(struct conbee_device *dev, uint8_t mode);
+
 #endif
